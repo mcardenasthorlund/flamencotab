@@ -1,5 +1,15 @@
 # FlamencoTab 🎸
 
+<p align="center">
+  <img src="flamenco-tab-pwa/public/icons/icon-192x192.png" width="120" alt="FlamencoTab" />
+</p>
+
+<p align="center">
+  <strong>Editor de tablaturas de guitarra flamenca como PWA</strong> · sin backend · datos en local
+  <br />
+  ▶️ <a href="https://appflamencotab.ideasypruebas2.es">Probar la aplicación</a>
+</p>
+
 Editor de tablaturas de **guitarra flamenca** como **PWA**, sin backend y con todos los datos guardados en local.
 
 Aplicación web progresiva (PWA) para crear, editar y guardar tablaturas de guitarra flamenca con notación específica del flamenco: rasgueos, alzapúa, golpes, ligaduras, compases y trémolo. Funciona sin conexión y se puede instalar en cualquier dispositivo.
