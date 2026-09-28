@@ -12,40 +12,60 @@
   @for (block of tab().blocks; track block.id; let bIdx = $index) {
     <section class="sheet-block">
       <h2 class="sheet-block-title">{{ blockLabel(block, bIdx) }}</h2>
-      @for (set of block.lineSets; track set.id) {
+      @for (set of block.lineSets; track set.id; let lsIdx = $index) {
         <div class="tab-wrap">
-          <div class="tab">
-            <div class="gutter">
-              @for (s of stringNumbers; track s) {
-                <span class="gutter-num">{{ s }}</span>
+          <div class="tab-rel">
+            <div class="tab" appGridRef [context]="{ blockIndex: bIdx, lineSetIndex: lsIdx }">
+              <div class="gutter">
+                @for (s of stringNumbers; track s) {
+                  <span class="gutter-num">{{ s }}</span>
+                }
+              </div>
+              @for (col of set.columns; track col.id; let cIdx = $index) {
+                <div class="column" [style.flex-grow]="columnGrow(col)">
+                  <div class="ornaments">
+                    @for (orn of lineOrnaments(col, cIdx); track orn.id) {
+                      <span class="orn" [class]="'orn-' + orn.type">
+                        @if (orn.type === 'repeat_start' || orn.type === 'repeat_end') {
+                          <span class="rn-bar rn-bar-thick"></span>
+                          <span class="rn-bar rn-bar-thin"></span>
+                          <span class="rn-dots"><i></i><i></i></span>
+                        }
+                        @if (orn.type === 'rasgueo') {
+                          <svg class="orn-rasgueo-svg" viewBox="0 0 12 40" preserveAspectRatio="none">
+                            <path d="M9 32 Q12 30 9 28 Q6 26 9 24 Q12 22 9 20 Q6 18 9 16 Q12 14 9 12" fill="none" stroke="#000" stroke-width="1" stroke-linecap="round" />
+                            <polygon points="9,2 5,11 13,11" fill="#000" />
+                          </svg>
+                        }
+                      </span>
+                    }
+                  </div>
+                  @if (textSymbols(col, cIdx).length) {
+                    <span class="symbols">{{ textSymbols(col, cIdx).join(' ') }}</span>
+                  }
+                  <div class="cells">
+                    @for (note of notesFor(col); track note.stringNumber) {
+                      <div
+                        class="cell"
+                        appCellRef
+                        [context]="{ blockIndex: bIdx, lineSetIndex: lsIdx, columnIndex: cIdx, stringNumber: note.stringNumber }"
+                      >
+                        <span class="cell-num">{{ noteText(note, col, cIdx) }}</span>
+                      </div>
+                    }
+                  </div>
+                </div>
               }
             </div>
-            @for (col of set.columns; track col.id; let cIdx = $index) {
-              <div class="column" [style.flex-grow]="columnGrow(col)">
-                <div class="ornaments">
-                  @for (orn of lineOrnaments(col, cIdx); track orn.id) {
-                    <span class="orn" [class]="'orn-' + orn.type">
-                      @if (orn.type === 'rasgueo') {
-                        <svg class="orn-rasgueo-svg" viewBox="0 0 12 40" preserveAspectRatio="none">
-                          <path d="M6 32 Q9 30 6 28 Q3 26 6 24 Q9 22 6 20 Q3 18 6 16 Q9 14 6 12" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" />
-                          <polygon points="6,2 1.5,11 10.5,11" fill="#000" />
-                        </svg>
-                      }
-                    </span>
-                  }
-                </div>
-                @if (textSymbols(col, cIdx).length) {
-                  <span class="symbols">{{ textSymbols(col, cIdx).join(' ') }}</span>
-                }
-                <div class="cells">
-                  @for (note of notesFor(col); track note.stringNumber) {
-                    <div class="cell">
-                      <span class="cell-num">{{ noteText(note, col, cIdx) }}</span>
-                    </div>
-                  }
-                </div>
-              </div>
-            }
+            <svg
+              class="slur-overlay"
+              [attr.viewBox]="'0 0 ' + gridSize(bIdx, lsIdx).w + ' ' + gridSize(bIdx, lsIdx).h"
+              preserveAspectRatio="none"
+            >
+              @for (path of slurPathsFor(bIdx, lsIdx); track path.id) {
+                <path [attr.d]="path.d" class="slur-path" />
+              }
+            </svg>
           </div>
           @if (hasLabel(set)) {
             <div class="tab-labels">

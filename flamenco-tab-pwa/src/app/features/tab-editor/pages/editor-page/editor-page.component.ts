@@ -499,18 +499,18 @@ export class EditorPageComponent implements OnInit, OnDestroy {
   }
 
   private addOrnamentToColumn(type: OrnamentType, columnIndex: number): void {
-    const t = this.tab();
     const cell = this.selectedCell();
-    if (!t || !cell) return;
-    const col = this.columnAt(t, cell);
-    if (!col) return;
-    col.ornaments.push({
-      id: `orn-${Date.now()}-${Math.random()}`,
-      type,
-      positionIndex: columnIndex,
-      stringIndex: cell.stringNumber,
+    if (!cell) return;
+    this.mutateTab((t) => {
+      const col = this.columnAt(t, cell);
+      if (!col) return;
+      col.ornaments.push({
+        id: `orn-${Date.now()}-${Math.random()}`,
+        type,
+        positionIndex: columnIndex,
+        stringIndex: cell.stringNumber,
+      });
     });
-    this.storage.autoSave(t);
   }
 
   onFretInput(value: string): void {

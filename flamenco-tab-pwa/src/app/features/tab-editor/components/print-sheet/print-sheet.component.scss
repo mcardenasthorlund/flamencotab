@@ -45,15 +45,33 @@
   margin-top: 16px;
 }
 
+.tab-rel {
+  position: relative;
+}
+
 .tab {
   display: flex;
-  border-left: 1px solid #000;
   width: 100%;
+}
+
+.slur-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  overflow: visible;
+}
+
+.slur-path {
+  fill: none;
+  stroke: #000;
+  stroke-width: 1.5;
+  stroke-linecap: round;
 }
 
 .tab-labels {
   display: flex;
-  border-left: 1px solid #000;
   width: 100%;
   margin-top: 2px;
 }
@@ -120,9 +138,10 @@
 /* Ornamentos de línea (compás y flechas), alineados a la derecha */
 .ornaments {
   position: absolute;
-  top: 0;
+  top: 12px;
   bottom: 0;
   right: 0;
+  z-index: 2;
   display: flex;
   align-items: stretch;
   justify-content: flex-end;
@@ -178,47 +197,65 @@
 
 .orn-repeat_start::before,
 .orn-repeat_end::before {
-  left: 0;
-  transform: none;
-  background-repeat: no-repeat;
+  display: none;
 }
 
-.orn-repeat_start::before {
-  background-image: linear-gradient(#000, #000), linear-gradient(#000, #000);
-  background-size: 4px 100%, 2px 100%;
-  background-position: 0 0, 6px 0;
-}
-
-.orn-repeat_end {
-  width: 22px;
-}
-
-.orn-repeat_end::before {
-  background-image: linear-gradient(#000, #000), linear-gradient(#000, #000);
-  background-size: 2px 100%, 4px 100%;
-  background-position: 6px 0, 11px 0;
-}
-
-.orn-repeat_start::after,
-.orn-repeat_end::after {
-  content: '';
+.rn-bar {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: auto;
-  transform: none;
-  width: 4px;
-  background-image:
-    radial-gradient(circle 1.5px at 50% 38%, #000 98%, transparent 100%),
-    radial-gradient(circle 1.5px at 50% 62%, #000 98%, transparent 100%);
-  background-repeat: no-repeat;
+  background: #000;
 }
 
-.orn-repeat_start::after {
+.rn-bar-thick {
+  width: 4px;
+}
+
+.rn-bar-thin {
+  width: 2px;
+}
+
+.orn-repeat_start .rn-bar-thick {
+  left: 0;
+}
+
+.orn-repeat_start .rn-bar-thin {
+  left: 6px;
+}
+
+.orn-repeat_end .rn-bar-thin {
+  left: 5px;
+}
+
+.orn-repeat_end .rn-bar-thick {
+  left: 8px;
+}
+
+.rn-dots {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+}
+
+.rn-dots i {
+  display: block;
+  width: 3px;
+  height: 3px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: #000;
+}
+
+.orn-repeat_start .rn-dots {
   right: 0;
 }
 
-.orn-repeat_end::after {
+.orn-repeat_end .rn-dots {
   left: 0;
 }
 
@@ -234,8 +271,8 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 0;
+  left: auto;
   width: 14px;
   height: 100%;
 }
@@ -286,6 +323,7 @@
   top: -12px;
   left: 0;
   right: 0;
+  z-index: 2;
   text-align: center;
   font-size: 7pt;
   white-space: nowrap;
@@ -294,6 +332,10 @@
 /* Ajuste vertical (más estrecho): tamaños y alturas reducidos */
 .portrait .cell {
   height: 11px;
+}
+
+.portrait .ornaments {
+  top: 11px;
 }
 
 .portrait .gutter-num {

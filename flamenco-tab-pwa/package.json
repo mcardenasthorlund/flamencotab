@@ -1,6 +1,6 @@
 {
   "name": "flamenco-tab-pwa",
-  "version": "0.2-beta",
+  "version": "0.21-beta",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
