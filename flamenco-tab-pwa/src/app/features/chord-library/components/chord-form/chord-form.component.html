@@ -1,0 +1,42 @@
+<div class="chord-form">
+  <h3>Nuevo acorde</h3>
+
+  <label class="field">
+    <span>Nombre</span>
+    <input type="text" placeholder="Ej: SOL Flamenco (Por Medio)" [ngModel]="name()" (ngModelChange)="name.set($event)" />
+  </label>
+
+  <label class="field">
+    <span>Nota raíz</span>
+    <select [ngModel]="rootNote()" (ngModelChange)="rootNote.set($event)">
+      @for (n of notes; track n) {
+        <option [value]="n">{{ n }}</option>
+      }
+    </select>
+  </label>
+
+  <label class="field">
+    <span>Palos recomendados (separados por coma)</span>
+    <input type="text" placeholder="Bulerías, Tangos" [ngModel]="palos()" (ngModelChange)="palos.set($event)" />
+  </label>
+
+  <div class="positions">
+    <span class="positions-title">Postura (traste por cuerda)</span>
+    @for (n of stringNumbers; track n) {
+      <label class="position-row">
+        <span class="pos-label">Cuerda {{ n }}</span>
+        <input
+          type="text"
+          placeholder="0–24 o X"
+          [ngModel]="positions()[n]"
+          (ngModelChange)="onPositionChange(n, $event)"
+        />
+      </label>
+    }
+  </div>
+
+  <div class="form-actions">
+    <button class="btn btn-secondary" (click)="cancelled.emit()">Cancelar</button>
+    <button class="btn btn-primary" (click)="submit()" [disabled]="!name()">Guardar</button>
+  </div>
+</div>

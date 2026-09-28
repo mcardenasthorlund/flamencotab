@@ -1,0 +1,50 @@
+<header class="navbar">
+  <div class="nav-inner">
+    <!-- Marca / Logo -->
+    <a class="brand" routerLink="/editor" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <span class="brand-logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="brand-icon">
+          <line x1="4" y1="6" x2="20" y2="6" />
+          <line x1="4" y1="10" x2="20" y2="10" />
+          <line x1="4" y1="14" x2="20" y2="14" />
+          <line x1="4" y1="18" x2="20" y2="18" />
+          <circle cx="8" cy="6" r="1" fill="currentColor" />
+          <circle cx="13" cy="10" r="1" fill="currentColor" />
+          <circle cx="17" cy="14" r="1" fill="currentColor" />
+          <circle cx="11" cy="18" r="1" fill="currentColor" />
+        </svg>
+      </span>
+      <span class="brand-text">
+        <span class="brand-title">Flamenco<span class="brand-accent">Tab</span></span>
+        <span class="brand-tag">Tablaturas · PWA</span>
+        <span class="brand-version">v{{ version }}</span>
+      </span>
+    </a>
+
+    <!-- Indicador de vista (centro) -->
+    <nav class="nav-center" aria-label="Navegación principal">
+      <a routerLink="/tabs" routerLinkActive="active">Tablaturas</a>
+      <a
+        routerLink="/editor"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Editor</a
+      >
+      <a routerLink="/library" routerLinkActive="active">Acordes</a>
+    </nav>
+
+    <!-- Acciones derecha -->
+    <div class="nav-actions">
+      @if (updateAvailable()) {
+        <button class="btn btn-blue-light btn-icon" (click)="refreshApp()" title="Nueva versión disponible">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          <span>Actualizar</span>
+        </button>
+      }
+    </div>
+  </div>
+</header>

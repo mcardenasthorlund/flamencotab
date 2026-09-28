@@ -1,0 +1,218 @@
+@if (tab(); as t) {
+  <div class="editor">
+    <div class="toolbar">
+      <input
+        class="title-input"
+        type="text"
+        placeholder="Título de la tablatura"
+        [ngModel]="t.title"
+        (ngModelChange)="onTitleChange($event)"
+      />
+      <input
+        class="meta-input"
+        type="text"
+        placeholder="Palo (ej: Bulerías)"
+        [ngModel]="t.palo"
+        (ngModelChange)="onPaloChange($event)"
+      />
+      <input
+        class="meta-input"
+        type="text"
+        placeholder="Tonalidad (ej: Por Medio)"
+        [ngModel]="t.keySignature"
+        (ngModelChange)="onKeyChange($event)"
+      />
+      <button class="btn btn-primary" (click)="onSave()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Guardar
+      </button>
+      <button class="btn btn-secondary" (click)="onExport()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Exportar JSON
+      </button>
+      <button class="btn btn-secondary" (click)="onExportPdf()" [disabled]="exporting()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        {{ exporting() ? 'Generando…' : 'Exportar PDF' }}
+      </button>
+      <button class="btn btn-secondary" (click)="onPrint()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Imprimir
+      </button>
+      <label class="btn btn-secondary btn-file">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Importar
+        <input type="file" accept="application/json" (change)="onImportFile($event)" hidden />
+      </label>
+      <button class="btn btn-danger" (click)="onClearConfirm()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Limpiar
+      </button>
+    </div>
+
+    <app-ornament-toolbar (ornamentSelected)="onOrnamentSelected($event)" />
+
+    <div class="print-area" #printArea>
+      <app-tab-canvas
+        [blocks]="t.blocks"
+        [selectedCell]="selectedCell()"
+        [selectedOrnamentId]="selectedOrnamentId()"
+        [selectedSlurId]="selectedSlurId()"
+        (blockAdd)="onBlockAdd()"
+        (blockDelete)="requestBlockDelete($event)"
+        (blockDuplicate)="onBlockDuplicate($event)"
+        (blockMove)="onBlockMove($event)"
+        (blockTitleChange)="onBlockTitleChange($event)"
+        (lineSetAdd)="onLineSetAdd($event)"
+        (lineSetDuplicate)="onLineSetDuplicate($event)"
+        (lineSetDelete)="onLineSetDelete($event)"
+        (lineSetMove)="onLineSetMove($event)"
+        (columnAdd)="onColumnAdd($event)"
+        (columnRemove)="onColumnRemove($event)"
+        (columnLabelChange)="onColumnLabelChange($event)"
+        (cellSelect)="onCellSelect($event)"
+        (cellLongPress)="onCellLongPress($event)"
+        (ornamentLineClick)="onOrnamentLineClick($event)"
+        (slurSelect)="onSlurSelect($event)"
+      />
+    </div>
+
+    <div class="cell-actions" [class.hidden]="!selectedCell()">
+      @if (selectedCell(); as cell) {
+        <span class="cell-info">
+          Cuerda {{ cell.stringNumber }} · Columna {{ cell.columnIndex + 1 }}
+        </span>
+      }
+      <button class="btn btn-blue-light" (click)="showChordPicker.set(true)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m7 8 5-5 5 5"/><path d="M12 21a9 9 0 1 0-9-9"/></svg>
+        Importar acorde
+      </button>
+      <button class="btn btn-secondary" (click)="onOrnamentMenuOption('bar_line')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="3" x2="12" y2="21"/></svg>
+        Compás
+      </button>
+    </div>
+
+    <app-chord-picker-dialog
+      [open]="showChordPicker()"
+      [chords]="chords()"
+      (chordSelected)="onChordPicked($event)"
+      (dismissed)="showChordPicker.set(false)"
+    />
+
+    @if (showClearConfirm()) {
+      <app-confirm-dialog
+        title="Limpiar tablatura"
+        message="Se eliminará todo el contenido actual. ¿Continuar?"
+        confirmText="Limpiar"
+        (confirmed)="onClear()"
+        (dismissed)="showClearConfirm.set(false)"
+      />
+    }
+
+    @if (pendingBlockDelete() !== null) {
+      <app-confirm-dialog
+        title="Eliminar bloque"
+        message="¿Eliminar este bloque de la tablatura? Esta acción no se puede deshacer."
+        confirmText="Eliminar"
+        (confirmed)="confirmBlockDelete()"
+        (dismissed)="pendingBlockDelete.set(null)"
+      />
+    }
+
+    @if (pendingLineSetDelete() !== null) {
+      <app-confirm-dialog
+        title="Eliminar líneas"
+        message="¿Eliminar esta tanda de líneas? Esta acción no se puede deshacer."
+        confirmText="Eliminar"
+        (confirmed)="confirmLineSetDelete()"
+        (dismissed)="pendingLineSetDelete.set(null)"
+      />
+    }
+
+    @if (showOrnamentMenu()) {
+      <div
+        class="ornament-quick-menu"
+        [style.left.px]="ornamentMenuPos().x"
+        [style.top.px]="ornamentMenuPos().y"
+      >
+        @for (orn of quickOrnaments; track orn.type) {
+          <button class="quick-btn" (click)="onOrnamentMenuOption(orn.type)">
+            {{ orn.symbol }}
+          </button>
+        }
+        <button class="quick-btn quick-close" (click)="showOrnamentMenu.set(false)">✕</button>
+      </div>
+    }
+
+    @if (showOrnamentActions()) {
+      <div
+        class="ornament-actions-menu"
+        [style.left.px]="ornamentActionsPos().x"
+        [style.top.px]="ornamentActionsPos().y"
+      >
+        <button class="btn btn-danger btn-xs" (click)="requestOrnamentDelete()">
+          {{ ornamentActionLabel() }}
+        </button>
+        <button class="btn btn-secondary btn-xs" (click)="dismissOrnamentActions()">
+          Cerrar
+        </button>
+      </div>
+    }
+
+    @if (showOrnamentDeleteConfirm()) {
+      <app-confirm-dialog
+        title="Eliminar ornamento"
+        [message]="ornamentDeleteMessage()"
+        confirmText="Eliminar"
+        (confirmed)="confirmOrnamentDelete()"
+        (dismissed)="showOrnamentDeleteConfirm.set(false)"
+      />
+    }
+
+    <div class="fret-dial" [class.hidden]="!selectedCell()">
+      <button class="dial-btn dial-arrow" (click)="incrementFret()">▲</button>
+      <button class="dial-btn dial-arrow" (click)="decrementFret()">▼</button>
+      <span class="dial-sep"></span>
+      @for (n of [0,1,2,3,4,5,6,7,8,9,10,11,12]; track n) {
+        <button class="dial-btn" (click)="onFretInput(n.toString())">{{ n }}</button>
+      }
+      <button class="dial-btn" (click)="onFretInput('X')">X</button>
+      <button class="dial-btn dial-clear" (click)="onFretInput('')">Borrar</button>
+    </div>
+
+    @if (showTremoloEditor()) {
+      <div class="tremolo-editor">
+        <div class="tremolo-editor-title">Trémolo</div>
+        <div class="tremolo-editor-notes">
+          @for (i of [0,1,2,3]; track i) {
+            <input
+              class="tremolo-note-input"
+              type="text"
+              inputmode="numeric"
+              placeholder="{{ i + 1 }}"
+              [value]="tremoloFrets()[i]"
+              (input)="setTremoloFret(i, $any($event.target).value)"
+            />
+          }
+        </div>
+        <button class="btn btn-danger btn-xs" (click)="deleteTremolo()">Eliminar trémolo</button>
+      </div>
+    }
+  </div>
+
+  <div class="print-sheet-host" #printSheet [style.width.px]="sheetWidth()">
+    <app-print-sheet
+      [tab]="t"
+      [landscape]="sheetOptions().landscape"
+      [showTitle]="sheetOptions().showTitle"
+      [showMeta]="sheetOptions().showMeta"
+      [author]="sheetOptions().author"
+    />
+  </div>
+
+  @if (showPrintDialog()) {
+    <app-print-dialog (print)="onPrintConfirm($event)" (dismissed)="showPrintDialog.set(false)" />
+  }
+} @else {
+  <div class="loading">Cargando…</div>
+}

@@ -1,0 +1,130 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+
+.nav-inner {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 0.75rem 0 1rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+/* Marca */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.brand-logo {
+  width: 2rem;
+  height: 2rem;
+  background: #2563eb;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.4);
+}
+
+.brand-icon {
+  width: 1.25rem;
+  height: 1.5rem;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.brand-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #0f172a;
+  white-space: nowrap;
+}
+
+.brand-accent {
+  color: #2563eb;
+}
+
+.brand-tag {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.brand-version {
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: #2563eb;
+  white-space: nowrap;
+}
+
+/* Centro */
+.nav-center {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.nav-center a {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+  text-decoration: none;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.nav-center a:hover {
+  color: #0f172a;
+  background: #f1f5f9;
+}
+
+.nav-center a.active {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+/* Acciones */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.btn-icon {
+  font-size: 0.75rem;
+  padding: 0.4rem 0.7rem;
+}
+
+@media (max-width: 640px) {
+  .brand-tag {
+    display: none;
+  }
+  .nav-center a {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.55rem;
+  }
+}

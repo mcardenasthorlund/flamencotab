@@ -1,0 +1,16 @@
+<div class="ornament-toolbar">
+  @for (btn of buttons; track btn.type; let i = $index) {
+    @if (i > 0 && buttons[i - 1].group !== btn.group) {
+      <span class="toolbar-sep"></span>
+    }
+    <button
+      class="ornament-btn"
+      [attr.title]="btn.label"
+      [attr.aria-label]="btn.label"
+      (click)="ornamentSelected.emit(btn.type)"
+    >
+      <span class="ornament-symbol">{{ btn.symbol }}</span>
+      <span class="ornament-label">{{ btn.label }}</span>
+    </button>
+  }
+</div>

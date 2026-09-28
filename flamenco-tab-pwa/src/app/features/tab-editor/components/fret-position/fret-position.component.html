@@ -1,0 +1,10 @@
+<div
+  class="fret-cell"
+  [class]="'thickness-' + stringNumber()"
+  [class.selected]="selected()"
+  (click)="cellClick.emit({ stringNumber: stringNumber(), columnIndex: columnIndex() })"
+  appTouchGestures
+  (longPress)="onLongPress($event)"
+>
+  <span class="fret-value" [class.tremolo]="tremolo()">{{ displayValue() }}</span>
+</div>

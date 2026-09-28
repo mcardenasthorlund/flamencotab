@@ -1,0 +1,14 @@
+<div class="overlay" (click)="dismissed.emit()">
+  <div class="dialog" role="dialog" (click)="$event.stopPropagation()">
+    <h2 class="dialog-title">{{ title() }}</h2>
+    <p class="dialog-message">{{ message() }}</p>
+    <div class="dialog-actions">
+      <button class="btn btn-secondary" (click)="dismissed.emit()">
+        {{ cancelText() }}
+      </button>
+      <button class="btn btn-danger" (click)="confirmed.emit()">
+        {{ confirmText() }}
+      </button>
+    </div>
+  </div>
+</div>

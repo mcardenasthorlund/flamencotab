@@ -1,0 +1,15 @@
+<div class="overlay">
+  <div class="dialog" role="dialog" aria-modal="true">
+    <h2 class="dialog-title">Nueva versión disponible</h2>
+    <p class="dialog-message">
+      Hay una nueva versión de FlamencoTab lista para instalar. Actualiza para
+      obtener las últimas mejoras.
+    </p>
+    <div class="dialog-actions">
+      <button class="btn btn-primary" (click)="updated.emit()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Actualizar
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,53 @@
+<div class="library">
+  <div class="library-head">
+    <h2>Biblioteca de acordes</h2>
+    <div class="head-actions">
+      <button class="btn btn-primary" (click)="showForm.set(true)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nuevo acorde
+      </button>
+      <button class="btn btn-secondary" (click)="requestReset()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><polyline points="3 3 3 8 8 8"/></svg>
+        Restablecer
+      </button>
+    </div>
+  </div>
+
+  @if (showForm()) {
+    <app-chord-form
+      (saved)="addChord($event)"
+      (cancelled)="showForm.set(false)"
+    />
+  }
+
+  <div class="chord-grid">
+    @for (chord of chords(); track chord.id) {
+      <app-chord-card
+        [chord]="chord"
+        (deleteRequested)="requestDelete(chord.id)"
+      />
+    } @empty {
+      <p class="empty">No hay acordes.</p>
+    }
+  </div>
+
+  @if (pendingDelete(); as id) {
+    <app-confirm-dialog
+      title="Eliminar acorde"
+      message="¿Eliminar este acorde personalizado? Esta acción no se puede deshacer."
+      confirmText="Eliminar"
+      (confirmed)="confirmDelete()"
+      (dismissed)="pendingDelete.set(null)"
+    />
+  }
+
+  @if (showResetConfirm()) {
+    <app-confirm-dialog
+      title="Restablecer biblioteca"
+      message="Se eliminarán todos los acordes personalizados. Los predefinidos se conservarán."
+      confirmText="Restablecer"
+      (confirmed)="confirmReset()"
+      (dismissed)="showResetConfirm.set(false)"
+    />
+  }
+</div>

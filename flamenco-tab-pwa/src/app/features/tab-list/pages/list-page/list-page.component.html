@@ -1,0 +1,63 @@
+<div class="list-page">
+  <div class="list-head">
+    <h2>Mis tablaturas</h2>
+    <div class="head-actions">
+      <button class="btn btn-primary" (click)="createNew()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nueva tablatura
+      </button>
+      <label class="btn btn-secondary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Importar JSON
+        <input type="file" accept="application/json" (change)="onImportFile($event)" hidden />
+      </label>
+    </div>
+  </div>
+
+  @if (tabs().length) {
+    <div class="tab-list">
+      @for (tab of tabs(); track tab.id) {
+        <div class="tab-card">
+          <div class="tab-info">
+            <a
+              class="tab-title"
+              [routerLink]="['/editor', tab.id]"
+              (click)="openTab(tab.id)"
+            >
+              {{ tab.title }}
+            </a>
+            <div class="tab-meta">
+              @if (tab.palo) { <span class="chip">{{ tab.palo }}</span> }
+              @if (tab.keySignature) { <span class="chip">{{ tab.keySignature }}</span> }
+              <span class="tab-date">{{ tab.lastModifiedDate | date: 'short' }}</span>
+            </div>
+          </div>
+          <div class="tab-actions">
+            <button class="btn btn-secondary btn-xs" (click)="exportTab(tab.id)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Exportar
+            </button>
+            <button class="btn btn-danger btn-xs" (click)="requestDelete(tab.id)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              Eliminar
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <p class="empty">
+      No hay tablaturas todavía. Crea la primera para empezar a componer.
+    </p>
+  }
+
+  @if (pendingDelete(); as id) {
+    <app-confirm-dialog
+      title="Eliminar tablatura"
+      message="¿Eliminar esta tablatura definitivamente? Esta acción no se puede deshacer."
+      confirmText="Eliminar"
+      (confirmed)="confirmDelete()"
+      (dismissed)="pendingDelete.set(null)"
+    />
+  }
+</div>

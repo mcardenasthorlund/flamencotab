@@ -1,0 +1,55 @@
+.ornament-toolbar {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 0.6rem;
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+}
+
+.toolbar-sep {
+  width: 1px;
+  align-self: stretch;
+  min-height: 2.6rem;
+  margin: 0 0.3rem;
+  background: #E2E8F0;
+}
+
+.ornament-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  width: 3.4rem;
+  padding: 0.35rem 0.3rem;
+  background: #F8FAFC;
+  color: #1E293B;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.ornament-btn:hover {
+  background: #efefef;
+}
+
+.ornament-btn:active {
+  transform: scale(0.95);
+}
+
+.ornament-symbol {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #2563EB;
+}
+
+.ornament-label {
+  font-size: 0.6rem;
+  color: #64748B;
+  text-align: center;
+  line-height: 1.05;
+}

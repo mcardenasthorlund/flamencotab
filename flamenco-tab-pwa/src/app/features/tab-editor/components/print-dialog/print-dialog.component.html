@@ -1,0 +1,57 @@
+<div class="overlay" (click)="dismissed.emit()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h3 class="modal-title">Imprimir tablatura</h3>
+
+    <fieldset class="fieldset">
+      <legend class="legend">Orientación</legend>
+      <div class="row">
+        <label class="radio">
+          <input
+            type="radio"
+            name="orientation"
+            [checked]="!landscape()"
+            (change)="landscape.set(false)"
+          />
+          <span>Vertical</span>
+        </label>
+        <label class="radio">
+          <input
+            type="radio"
+            name="orientation"
+            [checked]="landscape()"
+            (change)="landscape.set(true)"
+          />
+          <span>Apaisado</span>
+        </label>
+      </div>
+    </fieldset>
+
+    <label class="check">
+      <input
+        type="checkbox"
+        [checked]="showTitle()"
+        (change)="showTitle.set($event.target.checked)"
+      />
+      <span>Incluir título</span>
+    </label>
+
+    <label class="check">
+      <input
+        type="checkbox"
+        [checked]="showMeta()"
+        (change)="showMeta.set($event.target.checked)"
+      />
+      <span>Incluir palo y tonalidad</span>
+    </label>
+
+    <label class="author-field">
+      <span class="author-label">Autor</span>
+      <input class="author-input" type="text" [(ngModel)]="author" placeholder="Nombre del autor" />
+    </label>
+
+    <div class="actions">
+      <button class="btn btn-secondary" (click)="dismissed.emit()">Cancelar</button>
+      <button class="btn btn-primary" (click)="confirm()">Generar</button>
+    </div>
+  </div>
+</div>

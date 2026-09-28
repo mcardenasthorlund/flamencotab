@@ -1,0 +1,27 @@
+.string-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2rem;
+}
+
+.string-label {
+  width: 1.4rem;
+  text-align: center;
+  font-size: 0.7rem;
+  color: #64748B;
+  flex-shrink: 0;
+}
+
+.string-line {
+  flex: 1;
+  background: #CBD5E1;
+  border-radius: 2px;
+}
+
+.thickness-1 { height: 2px; }
+.thickness-2 { height: 3px; }
+.thickness-3 { height: 4px; }
+.thickness-4 { height: 5px; }
+.thickness-5 { height: 6px; }
+.thickness-6 { height: 7px; }

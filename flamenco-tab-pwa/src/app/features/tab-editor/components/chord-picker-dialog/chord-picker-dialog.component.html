@@ -1,0 +1,31 @@
+@if (open()) {
+  <div class="overlay" (click)="onBackdropClick()">
+    <div class="dialog" role="dialog" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h2>Importar acorde</h2>
+        <button class="close-btn" (click)="dismissed.emit()">×</button>
+      </div>
+
+      <input
+        class="search"
+        type="text"
+        placeholder="Buscar acorde o palo…"
+        [ngModel]="query()"
+        (ngModelChange)="query.set($event)"
+      />
+
+      <ul class="chord-list">
+        @for (chord of filteredChords(); track chord.id) {
+          <li>
+            <button class="chord-item" (click)="chordSelected.emit(chord)">
+              <span class="chord-name">{{ chord.name }}</span>
+              <span class="chord-note">{{ chord.rootNote }}</span>
+            </button>
+          </li>
+        } @empty {
+          <li class="empty">No hay acordes que coincidan.</li>
+        }
+      </ul>
+    </div>
+  </div>
+}

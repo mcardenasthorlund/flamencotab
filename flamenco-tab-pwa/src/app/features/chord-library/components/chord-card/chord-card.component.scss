@@ -1,0 +1,87 @@
+.chord-card {
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.card-name {
+  font-weight: 600;
+  color: #0F172A;
+  font-size: 0.95rem;
+}
+
+.card-note {
+  color: #2563EB;
+  font-weight: 700;
+  border: 1px solid #2563EB;
+  border-radius: 4px;
+  padding: 0.1rem 0.45rem;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.card-diagram {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.diagram-string {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.diagram-label {
+  width: 1rem;
+  text-align: center;
+  font-size: 0.7rem;
+  color: #64748B;
+}
+
+.diagram-fret {
+  flex: 1;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1E293B;
+  background: #F8FAFC;
+  border-radius: 4px;
+  padding: 0.15rem 0;
+}
+
+.card-palos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.palo-chip {
+  background: #F1F5F9;
+  color: #475569;
+  font-size: 0.7rem;
+  border-radius: 10px;
+  padding: 0.15rem 0.55rem;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.custom-badge {
+  font-size: 0.7rem;
+  color: #1D4ED8;
+}

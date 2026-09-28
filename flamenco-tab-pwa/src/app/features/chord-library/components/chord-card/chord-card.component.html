@@ -1,0 +1,33 @@
+<div class="chord-card">
+  <div class="card-header">
+    <span class="card-name">{{ chord().name }}</span>
+    <span class="card-note">{{ chord().rootNote }}</span>
+  </div>
+
+  <div class="card-diagram">
+    @for (pos of positionsFor(); track pos.stringNumber) {
+      <div class="diagram-string">
+        <span class="diagram-label">{{ pos.stringNumber }}</span>
+        <span class="diagram-fret">{{ pos.fret }}</span>
+      </div>
+    }
+  </div>
+
+  @if (chord().palosRecomendados?.length) {
+    <div class="card-palos">
+      @for (p of chord().palosRecomendados; track p) {
+        <span class="palo-chip">{{ p }}</span>
+      }
+    </div>
+  }
+
+  @if (chord().isCustom) {
+    <div class="card-footer">
+      <span class="custom-badge">Personalizado</span>
+      <button class="btn btn-danger btn-xs" (click)="deleteRequested.emit()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Eliminar
+      </button>
+    </div>
+  }
+</div>

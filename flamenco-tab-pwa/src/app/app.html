@@ -1,0 +1,9 @@
+<app-header />
+<main class="app-main">
+  <router-outlet />
+</main>
+<app-footer />
+
+@if (updateAvailable()) {
+  <app-update-dialog (updated)="applyUpdate()" />
+}

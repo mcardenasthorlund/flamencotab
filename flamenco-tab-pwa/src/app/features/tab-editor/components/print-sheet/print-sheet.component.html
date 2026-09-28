@@ -1,0 +1,64 @@
+<div class="sheet" [class.portrait]="!landscape()" [class.landscape]="landscape()">
+  @if (showTitle()) {
+    <h1 class="sheet-title">{{ tab().title }}</h1>
+  }
+  @if (showMeta() && paloLine()) {
+    <p class="sheet-subtitle">{{ paloLine() }}</p>
+  }
+  @if (author()) {
+    <p class="sheet-author">{{ author() }}</p>
+  }
+
+  @for (block of tab().blocks; track block.id; let bIdx = $index) {
+    <section class="sheet-block">
+      <h2 class="sheet-block-title">{{ blockLabel(block, bIdx) }}</h2>
+      @for (set of block.lineSets; track set.id) {
+        <div class="tab-wrap">
+          <div class="tab">
+            <div class="gutter">
+              @for (s of stringNumbers; track s) {
+                <span class="gutter-num">{{ s }}</span>
+              }
+            </div>
+            @for (col of set.columns; track col.id; let cIdx = $index) {
+              <div class="column" [style.flex-grow]="columnGrow(col)">
+                <div class="ornaments">
+                  @for (orn of lineOrnaments(col, cIdx); track orn.id) {
+                    <span class="orn" [class]="'orn-' + orn.type">
+                      @if (orn.type === 'rasgueo') {
+                        <svg class="orn-rasgueo-svg" viewBox="0 0 12 40" preserveAspectRatio="none">
+                          <path d="M6 32 Q9 30 6 28 Q3 26 6 24 Q9 22 6 20 Q3 18 6 16 Q9 14 6 12" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" />
+                          <polygon points="6,2 1.5,11 10.5,11" fill="#000" />
+                        </svg>
+                      }
+                    </span>
+                  }
+                </div>
+                @if (textSymbols(col, cIdx).length) {
+                  <span class="symbols">{{ textSymbols(col, cIdx).join(' ') }}</span>
+                }
+                <div class="cells">
+                  @for (note of notesFor(col); track note.stringNumber) {
+                    <div class="cell">
+                      <span class="cell-num">{{ noteText(note, col, cIdx) }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+          @if (hasLabel(set)) {
+            <div class="tab-labels">
+              <div class="gutter"></div>
+              @for (col of set.columns; track col.id) {
+                <div class="label-cell" [style.flex-grow]="columnGrow(col)">
+                  <span class="column-label">{{ col.label }}</span>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </section>
+  }
+</div>

@@ -1,0 +1,225 @@
+.editor {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.toolbar {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.title-input {
+  flex: 1 1 100%;
+  padding: 0.6rem 0.75rem;
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  color: #0F172A;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.meta-input {
+  flex: 1 1 200px;
+  padding: 0.5rem 0.75rem;
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  color: #1E293B;
+}
+
+.btn-file {
+  display: inline-flex;
+  cursor: pointer;
+}
+
+.cell-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.cell-actions.hidden,
+.fret-dial.hidden {
+  display: none;
+}
+
+.cell-info {
+  font-size: 0.85rem;
+  color: #64748B;
+}
+
+.fret-dial {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 900;
+  display: flex;
+  gap: 0.35rem;
+  padding: 0.6rem;
+  background: rgba(255, 255, 255, 0.97);
+  border-top: 2px solid #2563EB;
+  overflow-x: auto;
+  justify-content: center;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.dial-btn {
+  min-width: 2.6rem;
+  height: 3rem;
+  background: #F8FAFC;
+  color: #0F172A;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.dial-btn:active {
+  background: #2563EB;
+  color: #fff;
+}
+
+.dial-clear {
+  background: #2563EB;
+  color: #fff;
+}
+
+.dial-arrow {
+  background: #2563EB;
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.dial-sep {
+  width: 1px;
+  background: #E2E8F0;
+  align-self: stretch;
+  margin: 0 0.15rem;
+}
+
+.tremolo-editor {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 950;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 1rem 1.2rem;
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.tremolo-editor-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+.tremolo-editor-notes {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.tremolo-note-input {
+  width: 2.6rem;
+  height: 2.6rem;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0F172A;
+  background: #F8FAFC;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  outline: none;
+}
+
+.tremolo-note-input:focus {
+  border-color: #2563EB;
+  background: #fff;
+}
+
+@media (min-width: 1024px) {
+  .fret-dial {
+    position: static;
+    display: none;
+  }
+}
+
+.loading {
+  padding: 2rem;
+  text-align: center;
+  color: #64748B;
+}
+
+.print-area {
+  border-radius: 6px;
+}
+
+.print-sheet-host {
+  position: fixed;
+  top: 0;
+  left: -9999px;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.ornament-quick-menu {
+  position: fixed;
+  z-index: 1100;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  padding: 0.5rem;
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  max-width: 260px;
+}
+
+.quick-btn {
+  min-width: 2rem;
+  height: 2rem;
+  background: #F8FAFC;
+  color: #0F172A;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.quick-btn:hover {
+  background: #2563EB;
+  color: #fff;
+}
+
+.quick-close {
+  margin-left: auto;
+}
+
+.ornament-actions-menu {
+  position: fixed;
+  z-index: 1100;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  padding: 0.5rem;
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+}

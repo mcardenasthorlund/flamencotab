@@ -1,0 +1,162 @@
+<div class="canvas-wrap" appTouchGestures>
+  @for (block of blocks(); track block.id; let bIdx = $index) {
+    <div class="tab-block">
+      <div class="block-head">
+        <input
+          class="block-title-input"
+          type="text"
+          [ngModel]="blockLabel(block, bIdx)"
+          (ngModelChange)="onTitleChange(bIdx, $event)"
+          placeholder="Título del bloque"
+        />
+        <div class="block-head-actions">
+          @if (bIdx > 0) {
+            <button class="icon-btn icon-btn-block" title="Subir bloque" (click)="blockMove.emit({ blockIndex: bIdx, direction: -1 })">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+            </button>
+          }
+          @if (bIdx < blocks().length - 1) {
+            <button class="icon-btn icon-btn-block" title="Bajar bloque" (click)="blockMove.emit({ blockIndex: bIdx, direction: 1 })">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+            </button>
+          }
+          <button class="icon-btn icon-btn-block" title="Duplicar bloque" (click)="blockDuplicate.emit(bIdx)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+          <button class="icon-btn icon-btn-block icon-danger" title="Eliminar bloque" (click)="blockDelete.emit(bIdx)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+        </div>
+      </div>
+
+      @for (set of block.lineSets; track set.id; let lsIdx = $index) {
+        <div class="line-set">
+          <div class="line-set-head">
+            <div class="line-set-cols">
+              <button class="icon-btn" title="Quitar columna" (click)="columnRemove.emit({ blockIndex: bIdx, lineSetIndex: lsIdx })">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+              <span class="line-set-col-count">{{ set.columns.length }} col.</span>
+              <button class="icon-btn" title="Añadir columna" (click)="columnAdd.emit({ blockIndex: bIdx, lineSetIndex: lsIdx })">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+            </div>
+            <div class="line-set-actions">
+              @if (lsIdx > 0) {
+                <button class="icon-btn" title="Subir" (click)="lineSetMove.emit({ blockIndex: bIdx, lineSetIndex: lsIdx, direction: -1 })">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                </button>
+              }
+              @if (lsIdx < block.lineSets.length - 1) {
+                <button class="icon-btn" title="Bajar" (click)="lineSetMove.emit({ blockIndex: bIdx, lineSetIndex: lsIdx, direction: 1 })">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+                </button>
+              }
+              <button class="icon-btn" title="Duplicar" (click)="lineSetDuplicate.emit({ blockIndex: bIdx, lineSetIndex: lsIdx })">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+              <button class="icon-btn icon-danger" title="Eliminar" (click)="lineSetDelete.emit({ blockIndex: bIdx, lineSetIndex: lsIdx })">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div
+              class="tab-grid"
+              [class.has-slur]="slurPathsFor(bIdx, lsIdx).length > 0"
+              appGridRef
+              [context]="{ blockIndex: bIdx, lineSetIndex: lsIdx }"
+            >
+            <svg
+              class="slur-overlay"
+              [attr.viewBox]="'0 0 ' + gridSize(bIdx, lsIdx).w + ' ' + gridSize(bIdx, lsIdx).h"
+              preserveAspectRatio="none"
+            >
+              @for (path of slurPathsFor(bIdx, lsIdx); track path.id) {
+                <path
+                  [attr.d]="path.d"
+                  class="slur-path"
+                  [class.selected]="isSlurSelected(path.id)"
+                  (click)="onSlurClick($event, bIdx, lsIdx, path)"
+                />
+              }
+            </svg>
+            <div class="string-gutter">
+              @for (s of stringNumbers; track s) {
+                <span class="string-num">{{ s }}</span>
+              }
+            </div>
+@for (col of set.columns; track col.id; let cIdx = $index) {
+              <div class="tab-column" [style.flex-grow]="columnGrow(col)">
+                @if (lineOrnaments(col, cIdx).length) {
+                  <div class="ornament-line-row">
+                    @for (orn of lineOrnaments(col, cIdx); track orn.id) {
+                      <span
+                        class="ornament-line-item line-{{ orn.type }}"
+                        [class.selected]="isSelectedOrnament(orn.id)"
+                        [attr.title]="ornamentSymbol[orn.type].label"
+                        (click)="onOrnamentLineClick($event, bIdx, lsIdx, cIdx, orn)"
+                      >
+                        @if (orn.type === 'repeat_start' || orn.type === 'repeat_end') {
+                          <span class="repeat-dots"><span></span><span></span></span>
+                        }
+                        @if (orn.type === 'rasgueo') {
+                          <svg class="rasgueo-svg" viewBox="0 0 12 40" preserveAspectRatio="none">
+                            <path d="M6 32 Q9 30 6 28 Q3 26 6 24 Q9 22 6 20 Q3 18 6 16 Q9 14 6 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                            <polygon points="6,2 1.5,11 10.5,11" fill="currentColor" />
+                          </svg>
+                        }
+                      </span>
+                    }
+                  </div>
+                }
+                @for (orn of textOrnaments(col, cIdx); track orn.id) {
+                  <span class="ornament-marker">{{ ornamentSymbol[orn.type].symbol }}</span>
+                }
+                <div class="cells">
+                  @for (note of notesFor(col); track note.stringNumber) {
+                    <app-fret-position
+                      appCellRef
+                      [context]="{ blockIndex: bIdx, lineSetIndex: lsIdx, columnIndex: cIdx, stringNumber: note.stringNumber }"
+                      [fret]="note.fret"
+                      [tremolo]="isTremolo(col, cIdx, note.stringNumber)"
+                      [tremoloFrets]="note.tremoloFrets"
+                      [selected]="isSelected(bIdx, lsIdx, cIdx, note.stringNumber)"
+                      [stringNumber]="note.stringNumber"
+                      [columnIndex]="cIdx"
+                      (cellClick)="onCellClick(bIdx, lsIdx, cIdx, $event.stringNumber)"
+                      (cellLongPress)="onCellLongPress(bIdx, lsIdx, cIdx, $event)"
+                    />
+                  }
+                </div>
+              </div>
+            }
+          </div>
+          <div class="label-row">
+            <div class="label-gutter"></div>
+            @for (col of set.columns; track col.id; let cIdx = $index) {
+              <div class="label-cell" [style.flex-grow]="columnGrow(col)">
+                <input
+                  class="column-label"
+                  type="text"
+                  [(ngModel)]="col.label"
+                  (ngModelChange)="onLabelChange(bIdx, lsIdx, cIdx, $event)"
+                />
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <button class="btn btn-secondary btn-xs add-lines-btn" (click)="lineSetAdd.emit(bIdx)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Añadir líneas
+      </button>
+    </div>
+  }
+
+  <button class="btn btn-secondary add-block-btn" (click)="blockAdd.emit()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Nuevo bloque
+  </button>
+</div>

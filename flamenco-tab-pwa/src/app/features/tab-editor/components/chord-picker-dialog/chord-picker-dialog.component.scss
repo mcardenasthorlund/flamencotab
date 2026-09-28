@@ -1,0 +1,106 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.dialog {
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 1.25rem;
+  max-width: 460px;
+  width: 100%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  color: #0F172A;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.dialog-header h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #2563EB;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: #64748B;
+  font-size: 1.4rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.search {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  color: #0F172A;
+  margin-bottom: 0.75rem;
+  box-sizing: border-box;
+}
+
+.chord-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.chord-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.85rem;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  color: #1E293B;
+  cursor: pointer;
+  text-align: left;
+}
+
+.chord-item:hover {
+  background: #efefef;
+  border-color: #2563EB;
+}
+
+.chord-name {
+  font-size: 0.9rem;
+}
+
+.chord-note {
+  font-size: 0.75rem;
+  color: #2563EB;
+  font-weight: 700;
+  border: 1px solid #2563EB;
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+}
+
+.empty {
+  color: #64748B;
+  text-align: center;
+  padding: 1rem;
+}
