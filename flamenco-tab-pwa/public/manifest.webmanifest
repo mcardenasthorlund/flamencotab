@@ -2,7 +2,7 @@
   "name": "FlamencoTab PWA - Editor de Tablaturas",
   "short_name": "FlamencoTab",
   "theme_color": "#2563EB",
-  "background_color": "#121212",
+  "background_color": "#2563EB",
   "display": "standalone",
   "orientation": "any",
   "scope": "./",

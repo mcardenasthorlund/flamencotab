@@ -260,24 +260,21 @@ export class EditorPageComponent implements OnInit, OnDestroy {
   }
 
   onTitleChange(value: string): void {
-    const t = this.tab();
-    if (!t) return;
-    t.title = value;
-    this.storage.autoSave(t);
+    this.mutateTab((t) => {
+      t.title = value;
+    });
   }
 
   onPaloChange(value: string): void {
-    const t = this.tab();
-    if (!t) return;
-    t.palo = value;
-    this.storage.autoSave(t);
+    this.mutateTab((t) => {
+      t.palo = value;
+    });
   }
 
   onKeyChange(value: string): void {
-    const t = this.tab();
-    if (!t) return;
-    t.keySignature = value;
-    this.storage.autoSave(t);
+    this.mutateTab((t) => {
+      t.keySignature = value;
+    });
   }
 
   onCellSelect(sel: CellSelection): void {
@@ -576,17 +573,17 @@ export class EditorPageComponent implements OnInit, OnDestroy {
   });
 
   setTremoloFret(index: number, value: string): void {
-    const t = this.tab();
-    const cell = this.selectedCell();
-    if (!t || !cell) return;
-    const note = this.noteAt(t, cell);
-    if (!note) return;
-    if (!note.tremoloFrets || note.tremoloFrets.length !== 4) {
-      const base = note.fret ?? '';
-      note.tremoloFrets = [base, base, base, base];
-    }
-    note.tremoloFrets[index] = value;
-    this.storage.autoSave(t);
+    this.mutateTab((t) => {
+      const cell = this.selectedCell();
+      if (!cell) return;
+      const note = this.noteAt(t, cell);
+      if (!note) return;
+      if (!note.tremoloFrets || note.tremoloFrets.length !== 4) {
+        const base = note.fret ?? '';
+        note.tremoloFrets = [base, base, base, base];
+      }
+      note.tremoloFrets[index] = value;
+    });
   }
 
   deleteTremolo(): void {
@@ -629,15 +626,14 @@ export class EditorPageComponent implements OnInit, OnDestroy {
     columnIndex: number;
     label: string;
   }): void {
-    const t = this.tab();
-    if (!t) return;
-    const col =
-      t.blocks[change.blockIndex]?.lineSets[change.lineSetIndex]?.columns[
-        change.columnIndex
-      ];
-    if (!col) return;
-    col.label = change.label;
-    this.storage.autoSave(t);
+    this.mutateTab((t) => {
+      const col =
+        t.blocks[change.blockIndex]?.lineSets[change.lineSetIndex]?.columns[
+          change.columnIndex
+        ];
+      if (!col) return;
+      col.label = change.label;
+    });
   }
 
   private mutateTab(mutator: (t: Tablature) => void): void {
@@ -647,12 +643,6 @@ export class EditorPageComponent implements OnInit, OnDestroy {
     mutator(clone);
     this.tab.set(clone);
     this.storage.autoSave(clone);
-  }
-
-  onSave(): void {
-    const t = this.tab();
-    if (!t) return;
-    this.storage.saveTab(t).subscribe();
   }
 
   onPrint(): void {
@@ -673,7 +663,7 @@ export class EditorPageComponent implements OnInit, OnDestroy {
       }
       html2canvas(el, {
         backgroundColor: '#ffffff',
-        scale: 2,
+        scale: 1.5,
         useCORS: true,
       })
         .then((rendered) => {
@@ -695,18 +685,51 @@ export class EditorPageComponent implements OnInit, OnDestroy {
     });
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-    const imgData = canvas.toDataURL('image/png');
+    const jpegQuality = 0.92;
     const imgWidth = pageWidth;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    let heightLeft = imgHeight;
-    let position = 0;
-    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
-    while (heightLeft > 0) {
-      position = heightLeft - imgHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+    const footerHeight = 10;
+    const usableHeight = pageHeight - footerHeight;
+    const totalPages = Math.max(1, Math.ceil(imgHeight / usableHeight));
+    const title = this.tab()?.title?.trim() ?? '';
+
+    for (let page = 0; page < totalPages; page++) {
+      if (page > 0) pdf.addPage();
+      const y = page * usableHeight;
+      const sliceH = Math.min(usableHeight, imgHeight - y);
+      const sourceY = (y / imgHeight) * canvas.height;
+      const sourceH = (sliceH / imgHeight) * canvas.height;
+      const slice = document.createElement('canvas');
+      slice.width = canvas.width;
+      slice.height = Math.max(1, Math.round(sourceH));
+      const sctx = slice.getContext('2d');
+      if (sctx) {
+        sctx.drawImage(
+          canvas,
+          0,
+          sourceY,
+          canvas.width,
+          sourceH,
+          0,
+          0,
+          slice.width,
+          slice.height
+        );
+        pdf.addImage(slice.toDataURL('image/jpeg', jpegQuality), 'JPEG', 0, 0, imgWidth, sliceH);
+      }
+      pdf.setDrawColor(180);
+      pdf.setLineWidth(0.3);
+      pdf.line(12, pageHeight - 10, pageWidth - 12, pageHeight - 10);
+      pdf.setFont('times', 'normal');
+      pdf.setFontSize(9);
+      pdf.setTextColor(80);
+      pdf.text(title, pageWidth / 2, pageHeight - 5, { align: 'center' });
+      pdf.text(
+        `${page + 1} / ${totalPages}`,
+        pageWidth - 12,
+        pageHeight - 5,
+        { align: 'right' }
+      );
     }
     return pdf.output('blob');
   }
@@ -727,7 +750,7 @@ export class EditorPageComponent implements OnInit, OnDestroy {
       await new Promise((r) => setTimeout(r));
       const canvas = await html2canvas(this.printSheet.nativeElement, {
         backgroundColor: '#ffffff',
-        scale: 2,
+        scale: 1.5,
         useCORS: true,
       });
       const blob = this.buildPdfBlob(canvas, true);
