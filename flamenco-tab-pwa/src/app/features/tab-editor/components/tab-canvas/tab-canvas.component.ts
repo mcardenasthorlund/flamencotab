@@ -134,6 +134,7 @@ export class TabCanvasComponent implements AfterViewInit, OnDestroy {
 
   readonly slurPaths = signal<SlurPath[]>([]);
   readonly gridSizes = signal<Record<string, { w: number; h: number }>>({});
+  readonly collapsedBlocks = signal<Set<string>>(new Set());
 
   private resizeObserver: ResizeObserver | null = null;
   private measureQueued = false;
@@ -333,6 +334,17 @@ export class TabCanvasComponent implements AfterViewInit, OnDestroy {
 
   blockLabel(block: TabBlock, index: number): string {
     return block.title?.trim() ? block.title : `Bloque ${index + 1}`;
+  }
+
+  toggleCollapse(blockId: string): void {
+    const set = new Set(this.collapsedBlocks());
+    if (set.has(blockId)) set.delete(blockId);
+    else set.add(blockId);
+    this.collapsedBlocks.set(set);
+  }
+
+  isCollapsed(blockId: string): boolean {
+    return this.collapsedBlocks().has(blockId);
   }
 
   onTitleChange(index: number, value: string): void {

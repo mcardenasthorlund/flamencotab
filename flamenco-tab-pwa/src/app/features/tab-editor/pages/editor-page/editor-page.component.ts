@@ -54,6 +54,7 @@ export class EditorPageComponent implements OnInit, OnDestroy {
   readonly showChordPicker = signal(false);
   readonly showClearConfirm = signal(false);
   readonly showPrintDialog = signal(false);
+  readonly forceFretDial = signal(this.loadForceFretDial());
   readonly pendingBlockDelete = signal<number | null>(null);
   readonly pendingLineSetDelete = signal<{
     blockIndex: number;
@@ -789,5 +790,25 @@ export class EditorPageComponent implements OnInit, OnDestroy {
     this.selectedCell.set(null);
     this.showClearConfirm.set(false);
     this.storage.autoSave(t);
+  }
+
+  private loadForceFretDial(): boolean {
+    try {
+      return localStorage.getItem('flamenco_show_fret_dial') === 'true';
+    } catch {
+      return false;
+    }
+  }
+
+  onForceFretDialChange(checked: boolean): void {
+    this.forceFretDial.set(checked);
+    try {
+      localStorage.setItem(
+        'flamenco_show_fret_dial',
+        checked ? 'true' : 'false'
+      );
+    } catch {
+      /* ignore */
+    }
   }
 }

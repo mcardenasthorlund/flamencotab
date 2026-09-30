@@ -11,4 +11,5 @@ import { ORNAMENT_BUTTONS } from '../../../../core/constants/ornament.constant';
 export class OrnamentToolbarComponent {
   readonly buttons = ORNAMENT_BUTTONS;
   readonly ornamentSelected = output<OrnamentType>();
+  readonly chordPicker = output<void>();
 }

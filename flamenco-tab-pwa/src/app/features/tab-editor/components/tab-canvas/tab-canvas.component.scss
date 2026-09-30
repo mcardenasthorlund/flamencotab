@@ -2,9 +2,14 @@
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  overflow-x: auto;
+  overflow-x: hidden;
   touch-action: pan-x pan-y;
   padding-bottom: 1rem;
+}
+
+.line-set-scroll {
+  overflow-x: auto;
+  width: 100%;
 }
 
 .tab-block {
@@ -142,6 +147,9 @@
   display: flex;
   flex-direction: row;
   overflow-x: auto;
+  width: var(--tanda-width, 1340px);
+  max-width: var(--tanda-width, 1340px);
+  flex-shrink: 0;
   border-left: 1px solid #E2E8F0;
   border-top: 1px solid #E2E8F0;
   border-bottom: 1px solid #E2E8F0;
@@ -193,8 +201,8 @@
 
 .tab-column {
   position: relative;
-  flex: 1 1 auto;
-  min-width: 2.4rem;
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -445,6 +453,9 @@
   display: flex;
   flex-direction: row;
   margin-top: 0.25rem;
+  width: var(--tanda-width, 1340px);
+  max-width: var(--tanda-width, 1340px);
+  flex-shrink: 0;
 }
 
 .label-gutter {
@@ -453,7 +464,7 @@
 }
 
 .label-cell {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   min-width: 0;
   padding: 0 0.15rem;
 }

@@ -26,15 +26,18 @@ Aplicación web progresiva (PWA) para crear, editar y guardar tablaturas de guit
   - Rasgueos (abanico, pulgar, alzapúa), golpe, flechas de dirección.
   - Ligaduras (slur) y **trémolo** (una nota repetida 4 veces).
 - **Tandas de líneas (`lineSets`)**: añade, duplica, reordena y elimina tandas dentro de cada bloque.
-- **Bloques**: reordenables, duplicables y con título editable por bloque.
+- **Ancho fijo de tanda (1340 px)**: al añadir o quitar columnas, el ancho total se mantiene constante (las notas se compactan o separan); cada tanda tiene su propia barra de scroll horizontal en pantallas estrechas.
+- **Bloques**: reordenables, duplicables, con título editable por bloque y **colapsables/expandibles**.
 - **Librería de acordes flamencos** en nomenclatura española (DO, RE, MI, FA, SOL, LA, SI) con posturas para palos típicos (Bulerías, Soleá, Tangos…) y acordes personalizados.
-- **Importación de acordes** desde la librería a una columna seleccionada.
+- **Importación de acordes** desde la librería a una columna seleccionada (botón "Acorde" en la barra de ornamentos).
+- **Barra de ornamentos anclada** al top: permanece visible al hacer scroll, con tamaños de botones uniformes.
 - **Autoguardado** con debounce (~500 ms), sin necesidad de botón de guardado.
 - **Exportación / importación**: JSON y **PDF** (vía `html2canvas` + `jsPDF`).
 - **Impresión** rediseñada: modal con orientación (vertical/apaisado), opción de mostrar título, palo/tonalidad y autor, y **pie de página con el nombre de la tablatura y el número de página** (`X / Y`) en Times New Roman.
 - **PDF ligero y rápido**: imágenes comprimidas en JPEG de alta calidad (antes PNG, PDFs mucho más pequeños y rápidos de generar).
 - **PWA con actualizaciones automáticas**: el service worker se registra al instante, comprueba actualizaciones en internet al arrancar, cada 30 s y al volver a la pestaña; descarga nuevas versiones automáticamente y **avisa con una ventana** de "Nueva versión disponible".
-- **Responsive**: móvil (dial táctil de trastes), tablet y escritorio (teclado y flechas).
+- **Responsive**: móvil (dial táctil de trastes, botones de la barra y ornamentos con solo icono), tablet y escritorio (teclado y flechas).
+- **Panel de notas fijo**: un check "Panel de notas" permite forzar la visibilidad del dial de trastes en cualquier dispositivo (preferencia persistida en `localStorage`).
 - **Solo en español**, tema claro con acento de marca azul `#2563EB`.
 
 ---
@@ -124,6 +127,7 @@ npm test             # o: ng test
 | `flamenco_tab_{id}` | Contenido de cada tablatura (JSON) |
 | `flamenco_custom_chords` | Acordes creados por el usuario |
 | `flamenco_active_tab_id` | Última tablatura editada (restauración de sesión) |
+| `flamenco_show_fret_dial` | Preferencia de mostrar siempre el panel de trastes |
 
 ---
 

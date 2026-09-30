@@ -16,7 +16,7 @@
         (ngModelChange)="onPaloChange($event)"
       />
       <input
-        class="meta-input"
+        class="meta-input meta-input-key"
         type="text"
         placeholder="Tonalidad (ej: Por Medio)"
         [ngModel]="t.keySignature"
@@ -24,28 +24,35 @@
       />
       <button class="btn btn-secondary" (click)="onExport()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Exportar JSON
+        <span class="btn-text">Exportar JSON</span>
       </button>
       <button class="btn btn-secondary" (click)="onExportPdf()" [disabled]="exporting()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        {{ exporting() ? 'Generando…' : 'Exportar PDF' }}
+        <span class="btn-text">{{ exporting() ? 'Generando…' : 'Exportar PDF' }}</span>
       </button>
       <button class="btn btn-secondary" (click)="onPrint()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-        Imprimir
+        <span class="btn-text">Imprimir</span>
       </button>
       <label class="btn btn-secondary btn-file">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        Importar
+        <span class="btn-text">Importar</span>
         <input type="file" accept="application/json" (change)="onImportFile($event)" hidden />
+      </label>
+      <label class="btn btn-secondary force-dial-toggle">
+        <input type="checkbox" [checked]="forceFretDial()" (change)="onForceFretDialChange($any($event.target).checked)" />
+        <span class="btn-text">Panel de notas</span>
       </label>
       <button class="btn btn-danger" (click)="onClearConfirm()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        Limpiar
+        <span class="btn-text">Limpiar</span>
       </button>
     </div>
 
-    <app-ornament-toolbar (ornamentSelected)="onOrnamentSelected($event)" />
+    <app-ornament-toolbar
+      (ornamentSelected)="onOrnamentSelected($event)"
+      (chordPicker)="showChordPicker.set(true)"
+    />
 
     <div class="print-area" #printArea>
       <app-tab-canvas
@@ -73,19 +80,6 @@
     </div>
 
     <div class="cell-actions" [class.hidden]="!selectedCell()">
-      @if (selectedCell(); as cell) {
-        <span class="cell-info">
-          Cuerda {{ cell.stringNumber }} · Columna {{ cell.columnIndex + 1 }}
-        </span>
-      }
-      <button class="btn btn-blue-light" (click)="showChordPicker.set(true)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m7 8 5-5 5 5"/><path d="M12 21a9 9 0 1 0-9-9"/></svg>
-        Importar acorde
-      </button>
-      <button class="btn btn-secondary" (click)="onOrnamentMenuOption('bar_line')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="3" x2="12" y2="21"/></svg>
-        Compás
-      </button>
     </div>
 
     <app-chord-picker-dialog
@@ -165,7 +159,7 @@
       />
     }
 
-    <div class="fret-dial" [class.hidden]="!selectedCell()">
+    <div class="fret-dial" [class.hidden]="!selectedCell()" [class.force-visible]="forceFretDial()">
       <button class="dial-btn dial-arrow" (click)="incrementFret()">▲</button>
       <button class="dial-btn dial-arrow" (click)="decrementFret()">▼</button>
       <span class="dial-sep"></span>

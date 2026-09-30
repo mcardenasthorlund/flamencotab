@@ -10,6 +10,19 @@
           placeholder="Título del bloque"
         />
         <div class="block-head-actions">
+          <button
+            class="icon-btn icon-btn-block"
+            [attr.title]="isCollapsed(block.id) ? 'Expandir bloque' : 'Colapsar bloque'"
+            (click)="toggleCollapse(block.id)"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              @if (isCollapsed(block.id)) {
+                <polyline points="6 9 12 15 18 9"/>
+              } @else {
+                <polyline points="6 15 12 9 18 15"/>
+              }
+            </svg>
+          </button>
           @if (bIdx > 0) {
             <button class="icon-btn icon-btn-block" title="Subir bloque" (click)="blockMove.emit({ blockIndex: bIdx, direction: -1 })">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
@@ -29,6 +42,7 @@
         </div>
       </div>
 
+      @if (!isCollapsed(block.id)) {
       @for (set of block.lineSets; track set.id; let lsIdx = $index) {
         <div class="line-set">
           <div class="line-set-head">
@@ -61,12 +75,13 @@
             </div>
           </div>
 
-          <div
-              class="tab-grid"
-              [class.has-slur]="slurPathsFor(bIdx, lsIdx).length > 0"
-              appGridRef
-              [context]="{ blockIndex: bIdx, lineSetIndex: lsIdx }"
-            >
+          <div class="line-set-scroll">
+            <div
+                class="tab-grid"
+                [class.has-slur]="slurPathsFor(bIdx, lsIdx).length > 0"
+                appGridRef
+                [context]="{ blockIndex: bIdx, lineSetIndex: lsIdx }"
+              >
             <svg
               class="slur-overlay"
               [attr.viewBox]="'0 0 ' + gridSize(bIdx, lsIdx).w + ' ' + gridSize(bIdx, lsIdx).h"
@@ -145,6 +160,7 @@
               </div>
             }
           </div>
+          </div>
         </div>
       }
 
@@ -152,6 +168,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Añadir líneas
       </button>
+      }
     </div>
   }
 
