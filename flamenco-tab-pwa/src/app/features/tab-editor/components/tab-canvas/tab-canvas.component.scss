@@ -49,6 +49,13 @@
   text-align: center;
 }
 
+.line-set-cols-sep {
+  width: 1px;
+  height: 1.2rem;
+  background: #e2e8f0;
+  margin: 0 0.15rem;
+}
+
 .line-set-label {
   font-size: 0.7rem;
   font-weight: 600;
@@ -101,6 +108,17 @@
 .icon-danger:hover {
   background: #fee2e2;
   color: #dc2626;
+}
+
+.icon-danger-solid {
+  border-color: #fecaca;
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.icon-danger-solid:hover {
+  background: #fecaca;
+  color: #b91c1c;
 }
 
 .add-lines-btn {

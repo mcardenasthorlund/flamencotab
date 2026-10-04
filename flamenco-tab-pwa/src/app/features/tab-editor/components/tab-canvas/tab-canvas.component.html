@@ -54,6 +54,18 @@
               <button class="icon-btn" title="Añadir columna" (click)="columnAdd.emit({ blockIndex: bIdx, lineSetIndex: lsIdx })">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               </button>
+              @if (isActiveLine(bIdx, lsIdx)) {
+                <span class="line-set-cols-sep"></span>
+                <button class="icon-btn" title="Insertar columna antes de la selección" (click)="onColumnInsertBefore(bIdx, lsIdx)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="5 9 2 12 5 15"/></svg>
+                </button>
+                <button class="icon-btn" title="Insertar columna después de la selección" (click)="onColumnInsertAfter(bIdx, lsIdx)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 9 22 12 19 15"/></svg>
+                </button>
+                <button class="icon-btn icon-danger-solid" title="Eliminar columna de la selección" (click)="onColumnDelete(bIdx, lsIdx)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+              }
             </div>
             <div class="line-set-actions">
               @if (lsIdx > 0) {

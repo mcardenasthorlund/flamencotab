@@ -27,6 +27,7 @@ Aplicación web progresiva (PWA) para crear, editar y guardar tablaturas de guit
   - Ligaduras (slur) y **trémolo** (una nota repetida 4 veces).
 - **Tandas de líneas (`lineSets`)**: añade, duplica, reordena y elimina tandas dentro de cada bloque.
 - **Ancho fijo de tanda (1340 px)**: al añadir o quitar columnas, el ancho total se mantiene constante (las notas se compactan o separan); cada tanda tiene su propia barra de scroll horizontal en pantallas estrechas.
+- **Insertar / eliminar columnas desde la línea activa**: en la tanda de líneas que tiene la celda seleccionada, unos iconos permiten **insertar una columna antes o después** de la columna seleccionada y **eliminar esa columna** (con diálogo de confirmación). Solo se muestran en la línea activa.
 - **Bloques**: reordenables, duplicables, con título editable por bloque y **colapsables/expandibles**.
 - **Librería de acordes flamencos** en nomenclatura española (DO, RE, MI, FA, SOL, LA, SI) con posturas para palos típicos (Bulerías, Soleá, Tangos…) y acordes personalizados.
 - **Importación de acordes** desde la librería a una columna seleccionada (botón "Acorde" en la barra de ornamentos).

@@ -117,6 +117,21 @@ export class TabCanvasComponent implements AfterViewInit, OnDestroy {
   }>();
   readonly columnAdd = output<{ blockIndex: number; lineSetIndex: number }>();
   readonly columnRemove = output<{ blockIndex: number; lineSetIndex: number }>();
+  readonly columnInsertBefore = output<{
+    blockIndex: number;
+    lineSetIndex: number;
+    columnIndex: number;
+  }>();
+  readonly columnInsertAfter = output<{
+    blockIndex: number;
+    lineSetIndex: number;
+    columnIndex: number;
+  }>();
+  readonly columnDelete = output<{
+    blockIndex: number;
+    lineSetIndex: number;
+    columnIndex: number;
+  }>();
   readonly columnLabelChange = output<{
     blockIndex: number;
     lineSetIndex: number;
@@ -422,6 +437,15 @@ export class TabCanvasComponent implements AfterViewInit, OnDestroy {
     );
   }
 
+  isActiveLine(blockIndex: number, lineSetIndex: number): boolean {
+    const sel = this.selectedCell();
+    return (
+      !!sel &&
+      sel.blockIndex === blockIndex &&
+      sel.lineSetIndex === lineSetIndex
+    );
+  }
+
   onCellClick(
     blockIndex: number,
     lineSetIndex: number,
@@ -429,6 +453,50 @@ export class TabCanvasComponent implements AfterViewInit, OnDestroy {
     stringNumber: number
   ): void {
     this.cellSelect.emit({ blockIndex, lineSetIndex, columnIndex, stringNumber });
+  }
+
+  onColumnInsertBefore(
+    blockIndex: number,
+    lineSetIndex: number
+  ): void {
+    this.columnInsertBefore.emit({
+      blockIndex,
+      lineSetIndex,
+      columnIndex: this.resolveColumnIndex(blockIndex, lineSetIndex),
+    });
+  }
+
+  onColumnInsertAfter(
+    blockIndex: number,
+    lineSetIndex: number
+  ): void {
+    this.columnInsertAfter.emit({
+      blockIndex,
+      lineSetIndex,
+      columnIndex: this.resolveColumnIndex(blockIndex, lineSetIndex),
+    });
+  }
+
+  onColumnDelete(blockIndex: number, lineSetIndex: number): void {
+    this.columnDelete.emit({
+      blockIndex,
+      lineSetIndex,
+      columnIndex: this.resolveColumnIndex(blockIndex, lineSetIndex),
+    });
+  }
+
+  private resolveColumnIndex(blockIndex: number, lineSetIndex: number): number {
+    const set = this.blocks()[blockIndex]?.lineSets[lineSetIndex];
+    if (!set || !set.columns.length) return 0;
+    const sel = this.selectedCell();
+    if (
+      sel &&
+      sel.blockIndex === blockIndex &&
+      sel.lineSetIndex === lineSetIndex
+    ) {
+      return Math.min(Math.max(sel.columnIndex, 0), set.columns.length - 1);
+    }
+    return set.columns.length - 1;
   }
 
   onLabelChange(

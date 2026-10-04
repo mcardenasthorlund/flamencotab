@@ -1,7 +1,7 @@
 import { Component, signal, computed, inject, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Tablature, NoteEntry, TabColumn } from '../../../../core/models/tab.model';
+import { Tablature, NoteEntry, TabColumn, LineSet } from '../../../../core/models/tab.model';
 import { TabStorageService } from '../../../../core/services/tab-storage.service';
 import { ChordLibraryService } from '../../../../core/services/chord-library.service';
 import { Chord } from '../../../../core/models/chord.model';
@@ -59,6 +59,11 @@ export class EditorPageComponent implements OnInit, OnDestroy {
   readonly pendingLineSetDelete = signal<{
     blockIndex: number;
     lineSetIndex: number;
+  } | null>(null);
+  readonly pendingColumnDelete = signal<{
+    blockIndex: number;
+    lineSetIndex: number;
+    columnIndex: number;
   } | null>(null);
   readonly ornamentMenuPos = signal<{ x: number; y: number }>({ x: 0, y: 0 });
   readonly chords = signal<Chord[]>([]);
@@ -435,6 +440,96 @@ export class EditorPageComponent implements OnInit, OnDestroy {
       if (!set || set.columns.length <= 1) return;
       set.columns.pop();
       set.columns.forEach((c, i) => (c.index = i));
+    });
+  }
+
+  onColumnInsertBefore(payload: {
+    blockIndex: number;
+    lineSetIndex: number;
+    columnIndex: number;
+  }): void {
+    this.mutateTab((t) => {
+      const set = t.blocks[payload.blockIndex]?.lineSets[payload.lineSetIndex];
+      if (!set) return;
+      const newCol = this.storage.createEmptyColumn(payload.columnIndex);
+      set.columns.splice(payload.columnIndex, 0, newCol);
+      this.reindexColumns(set);
+    });
+    this.syncSelectionTo(
+      payload.blockIndex,
+      payload.lineSetIndex,
+      payload.columnIndex + 1
+    );
+  }
+
+  onColumnInsertAfter(payload: {
+    blockIndex: number;
+    lineSetIndex: number;
+    columnIndex: number;
+  }): void {
+    this.mutateTab((t) => {
+      const set = t.blocks[payload.blockIndex]?.lineSets[payload.lineSetIndex];
+      if (!set) return;
+      const newCol = this.storage.createEmptyColumn(payload.columnIndex + 1);
+      set.columns.splice(payload.columnIndex + 1, 0, newCol);
+      this.reindexColumns(set);
+    });
+    this.syncSelectionTo(
+      payload.blockIndex,
+      payload.lineSetIndex,
+      payload.columnIndex
+    );
+  }
+
+  onColumnDeleteSelected(payload: {
+    blockIndex: number;
+    lineSetIndex: number;
+    columnIndex: number;
+  }): void {
+    const t = this.tab();
+    const set = t?.blocks[payload.blockIndex]?.lineSets[payload.lineSetIndex];
+    if (!set || set.columns.length <= 1) return;
+    this.pendingColumnDelete.set(payload);
+  }
+
+  confirmColumnDelete(): void {
+    const payload = this.pendingColumnDelete();
+    this.pendingColumnDelete.set(null);
+    if (!payload) return;
+    this.mutateTab((tab) => {
+      const target = tab.blocks[payload.blockIndex]?.lineSets[payload.lineSetIndex];
+      if (!target) return;
+      target.columns.splice(payload.columnIndex, 1);
+      this.reindexColumns(target);
+    });
+    this.syncSelectionTo(
+      payload.blockIndex,
+      payload.lineSetIndex,
+      payload.columnIndex
+    );
+  }
+
+  private syncSelectionTo(
+    blockIndex: number,
+    lineSetIndex: number,
+    columnIndex: number
+  ): void {
+    const cur = this.selectedCell();
+    const set = this.tab()?.blocks[blockIndex]?.lineSets[lineSetIndex];
+    const max = set?.columns.length ?? 1;
+    const col = Math.max(0, Math.min(columnIndex, max - 1));
+    this.selectedCell.set({
+      blockIndex,
+      lineSetIndex,
+      columnIndex: col,
+      stringNumber: cur?.stringNumber ?? 1,
+    });
+  }
+
+  private reindexColumns(set: LineSet): void {
+    set.columns.forEach((c, i) => {
+      c.index = i;
+      c.ornaments.forEach((o) => (o.positionIndex = i));
     });
   }
 

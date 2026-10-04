@@ -71,6 +71,9 @@
         (lineSetMove)="onLineSetMove($event)"
         (columnAdd)="onColumnAdd($event)"
         (columnRemove)="onColumnRemove($event)"
+        (columnInsertBefore)="onColumnInsertBefore($event)"
+        (columnInsertAfter)="onColumnInsertAfter($event)"
+        (columnDelete)="onColumnDeleteSelected($event)"
         (columnLabelChange)="onColumnLabelChange($event)"
         (cellSelect)="onCellSelect($event)"
         (cellLongPress)="onCellLongPress($event)"
@@ -116,6 +119,16 @@
         confirmText="Eliminar"
         (confirmed)="confirmLineSetDelete()"
         (dismissed)="pendingLineSetDelete.set(null)"
+      />
+    }
+
+    @if (pendingColumnDelete() !== null) {
+      <app-confirm-dialog
+        title="Eliminar columna"
+        message="¿Eliminar esta columna de la tablatura? Esta acción no se puede deshacer."
+        confirmText="Eliminar"
+        (confirmed)="confirmColumnDelete()"
+        (dismissed)="pendingColumnDelete.set(null)"
       />
     }
 
