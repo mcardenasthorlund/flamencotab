@@ -3,14 +3,32 @@
   height: 1.4rem;
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* La nota se ancla a la izquierda de su slot; el espacio reservado a los
+     ornamentos (--orn-area) queda a la derecha de la nota. */
+  justify-content: flex-start;
   position: relative;
   cursor: pointer;
   user-select: none;
   touch-action: manipulation;
 }
 
-.fret-cell.selected::before {
+/* La caja de la nota ocupa el ancho de la columna menos el área reservada a
+   los ornamentos, de modo que su centro coincide con el de una columna sin
+   ornamentos aunque ésta se ensanche por la derecha. */
+.fret-value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: calc(100% - var(--orn-area, 0px));
+  font-size: 0.8rem;
+  color: #0F172A;
+  font-weight: 600;
+  position: relative;
+  z-index: 1;
+}
+
+.fret-cell.selected .fret-value::before {
   content: '';
   position: absolute;
   width: 1.2rem;
@@ -22,14 +40,6 @@
   border-radius: 50%;
   box-shadow: inset 0 0 0 2px #2563EB;
   pointer-events: none;
-}
-
-.fret-value {
-  font-size: 0.8rem;
-  color: #0F172A;
-  font-weight: 600;
-  position: relative;
-  z-index: 1;
 }
 
 .fret-cell::after {

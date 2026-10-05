@@ -177,7 +177,53 @@ export class TabCanvasComponent implements AfterViewInit, OnDestroy {
     this.measureQueued = true;
     requestAnimationFrame(() => {
       this.measureQueued = false;
+      this.applyOrnamentAreas();
       this.measureSlurs();
+    });
+  }
+
+  /**
+   * Reserva en cada columna el ancho real de su grupo de ornamentos (más una
+   * separación fija) para que el borde derecho de la columna se desplace con
+   * ellos sin pisar la siguiente. La nota queda anclada a su slot, así que el
+   * espaciado de la izquierda no cambia. Se aplica de forma imperativa para no
+   * depender de un ciclo extra de detección de cambios.
+   */
+  private applyOrnamentAreas(): void {
+    const trailing = 8;
+    this.gridRefs.forEach((grid) => {
+      const gctx = grid.context();
+      if (!gctx) return;
+      const gridEl = grid.element.nativeElement as HTMLElement;
+      const gutter = gridEl.querySelector('.string-gutter') as HTMLElement | null;
+      const cols = Array.from(gridEl.children).filter(
+        (el): el is HTMLElement => el.classList.contains('tab-column')
+      );
+      const n = cols.length;
+      if (!n) return;
+      const available = gridEl.clientWidth - (gutter?.offsetWidth ?? 0);
+      const base = available / n;
+      const lineSetEl = gridEl.closest('.line-set');
+      const labelCells = lineSetEl
+        ? (Array.from(
+            lineSetEl.querySelectorAll('.label-row > .label-cell')
+          ) as HTMLElement[])
+        : [];
+      const areas = cols.map((col) => {
+        const row = col.querySelector('.ornament-line-row') as HTMLElement | null;
+        const rowWidth = row ? row.offsetWidth : 0;
+        return Math.max(0, Math.round(rowWidth + trailing - base / 2));
+      });
+      cols.forEach((col, i) => {
+        const area = areas[i];
+        col.style.flexBasis = `${area}px`;
+        col.style.setProperty('--orn-area', `${area}px`);
+        const label = labelCells[i];
+        if (label) {
+          label.style.flexBasis = `${area}px`;
+          label.style.setProperty('--orn-area', `${area}px`);
+        }
+      });
     });
   }
 
@@ -306,7 +352,7 @@ export class TabCanvasComponent implements AfterViewInit, OnDestroy {
       });
     if (!cell) return null;
     const inner = cell.element.nativeElement.querySelector(
-      '.fret-cell'
+      '.fret-value'
     ) as HTMLElement | null;
     const target = inner ?? cell.element.nativeElement;
     const r = target.getBoundingClientRect();
@@ -389,14 +435,6 @@ export class TabCanvasComponent implements AfterViewInit, OnDestroy {
 
   isTremolo(column: TabColumn, positionIndex: number, stringNumber: number): boolean {
     return isColumnTremolo(column, positionIndex, stringNumber);
-  }
-
-  columnGrow(column: TabColumn): number {
-    return Math.max(1, this.lineOrnamentCount(column));
-  }
-
-  private lineOrnamentCount(column: TabColumn): number {
-    return column.ornaments.filter((o) => this.isLineOrnament(o.type)).length;
   }
 
   isSelectedOrnament(id: string): boolean {

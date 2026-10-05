@@ -229,8 +229,11 @@
 .ornament-marker {
   position: absolute;
   top: 0.1rem;
-  left: 0;
-  right: 0;
+  /* Centrado sobre la nota (mitad del slot de nota). */
+  left: calc((100% - var(--orn-area, 0px)) / 2);
+  right: auto;
+  transform: translateX(-50%);
+  white-space: nowrap;
   text-align: center;
   font-size: 0.8rem;
   color: #2563EB;
@@ -239,16 +242,22 @@
   z-index: 2;
 }
 
+/* Los ornamentos de línea se dibujan a la derecha de la nota con una
+   separación fija entre ellos y la misma desde la nota. La fila arranca en el
+   centro de la nota (mitad del slot) más un hueco constante; el ancho reservado
+   a los ornamentos (--orn-area) es el ancho real del grupo, de modo que el
+   borde derecho de la columna se desplaza con ellos. */
 .ornament-line-row {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 0;
-  right: 0;
+  left: calc((100% - var(--orn-area, 0px)) / 2);
+  right: auto;
   display: flex;
   align-items: stretch;
-  justify-content: flex-end;
-  gap: 2px;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  padding-left: 0.5rem;
   pointer-events: none;
   z-index: 2;
 }
@@ -488,7 +497,7 @@
 }
 
 .column-label {
-  width: 100%;
+  width: calc(100% - var(--orn-area, 0px));
   box-sizing: border-box;
   padding: 0.15rem 0.2rem;
   font-size: 0.62rem;

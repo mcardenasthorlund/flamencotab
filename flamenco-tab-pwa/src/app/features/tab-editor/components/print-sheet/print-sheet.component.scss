@@ -109,6 +109,8 @@
 }
 
 .column-label {
+  display: block;
+  width: calc(100% - var(--orn-area, 0px));
   font-size: 7.5pt;
   font-weight: 600;
   white-space: nowrap;
@@ -125,7 +127,7 @@
 
 .cell-num {
   position: absolute;
-  left: 50%;
+  left: calc((100% - var(--orn-area, 0px)) / 2);
   bottom: 0;
   transform: translate(-50%, 50%);
   background: #fff;
@@ -135,17 +137,22 @@
   white-space: nowrap;
 }
 
-/* Ornamentos de línea (compás y flechas), alineados a la derecha */
+/* Ornamentos de línea (compás y flechas), a la derecha de la nota con
+   separación fija entre ellos y la misma desde la nota. El ancho reservado
+   (--orn-area) es el ancho real del grupo, de modo que el borde derecho de la
+   columna se desplaza con ellos. */
 .ornaments {
   position: absolute;
   top: 12px;
   bottom: 0;
-  right: 0;
+  left: calc((100% - var(--orn-area, 0px)) / 2);
+  right: auto;
   z-index: 2;
   display: flex;
   align-items: stretch;
-  justify-content: flex-end;
-  gap: 2px;
+  justify-content: flex-start;
+  gap: 5px;
+  padding-left: 5px;
 }
 
 .orn {
@@ -321,8 +328,9 @@
 .symbols {
   position: absolute;
   top: -12px;
-  left: 0;
-  right: 0;
+  left: calc((100% - var(--orn-area, 0px)) / 2);
+  right: auto;
+  transform: translateX(-50%);
   z-index: 2;
   text-align: center;
   font-size: 7pt;

@@ -22,7 +22,7 @@
                 }
               </div>
               @for (col of set.columns; track col.id; let cIdx = $index) {
-                <div class="column" [style.flex-grow]="columnGrow(col)">
+                <div class="column">
                   <div class="ornaments">
                     @for (orn of lineOrnaments(col, cIdx); track orn.id) {
                       <span class="orn" [class]="'orn-' + orn.type">
@@ -71,7 +71,7 @@
             <div class="tab-labels">
               <div class="gutter"></div>
               @for (col of set.columns; track col.id) {
-                <div class="label-cell" [style.flex-grow]="columnGrow(col)">
+                <div class="label-cell">
                   <span class="column-label">{{ col.label }}</span>
                 </div>
               }

@@ -68,8 +68,20 @@
   background: rgba(255, 255, 255, 0.97);
   border-top: 2px solid #2563EB;
   overflow-x: auto;
-  justify-content: center;
+  -webkit-overflow-scrolling: touch;
+  /* Al desbordar, el contenido debe empezar por la izquierda para poder
+     desplazarse hasta el principio. El centrado cuando cabe se consigue con
+     márgenes automáticos en los extremos (abajo). */
+  justify-content: flex-start;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.fret-dial > :first-child {
+  margin-left: auto;
+}
+
+.fret-dial > :last-child {
+  margin-right: auto;
 }
 
 .dial-btn {
@@ -91,6 +103,31 @@
 .dial-clear {
   background: #2563EB;
   color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dial-clear-icon {
+  display: none;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.dial-clear-text {
+  display: inline;
+}
+
+/* En móvil el botón Borrar se muestra como icono; en escritorio (botonera
+   forzada) conserva el texto. */
+@media (max-width: 1023px) {
+  .dial-clear-icon {
+    display: block;
+  }
+
+  .dial-clear-text {
+    display: none;
+  }
 }
 
 .dial-arrow {

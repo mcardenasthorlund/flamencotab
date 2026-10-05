@@ -128,3 +128,11 @@
     padding: 0.35rem 0.55rem;
   }
 }
+
+/* En pantallas muy estrechas se muestra solo el logo para que quepan
+   todas las secciones de navegación. */
+@media (max-width: 440px) {
+  .brand-text {
+    display: none;
+  }
+}

@@ -1,0 +1,273 @@
+<article class="help">
+  <header class="help-hero">
+    <span class="badge badge-blue">Guía de uso</span>
+    <h1>Cómo usar FlamencoTab</h1>
+    <p class="lead">
+      FlamencoTab es un editor de tablaturas de guitarra flamenca que funciona como
+      aplicación web (PWA): no necesita cuenta ni conexión y guarda todo en tu
+      dispositivo. Esta guía explica cómo crear y editar tablaturas, usar los
+      ornamentos flamencos, gestionar acordes y exportar o imprimir tu trabajo.
+    </p>
+    <nav class="help-index" aria-label="Índice de la guía">
+      @for (s of sections; track s.id) {
+        <a class="index-chip" [attr.href]="'#' + s.id">{{ s.label }}</a>
+      }
+    </nav>
+  </header>
+
+  <!-- 1 · Primeros pasos -->
+  <section id="primeros-pasos" class="help-section">
+    <h2><span class="section-num">1</span> Primeros pasos</h2>
+    <p>La aplicación se organiza en tres secciones, accesibles desde la barra superior:</p>
+    <div class="cards">
+      <div class="mini-card">
+        <h3>Tablaturas</h3>
+        <p>Tu lista de tablaturas. Desde aquí creas una nueva, importas un JSON, exportas o eliminas.</p>
+      </div>
+      <div class="mini-card">
+        <h3>Editor</h3>
+        <p>Donde se compone. Abre la última tablatura editada o una nueva si no hay ninguna.</p>
+      </div>
+      <div class="mini-card">
+        <h3>Acordes</h3>
+        <p>Biblioteca de acordes flamencos en nomenclatura española (DO, RE, MI, FA, SOL, LA, SI).</p>
+      </div>
+    </div>
+    <div class="callout">
+      <strong>Autoguardado.</strong> No hay botón de guardar: cada cambio se guarda solo, con una
+      pequeña espera de medio segundo. Todo se almacena en tu navegador.
+    </div>
+  </section>
+
+  <!-- 2 · El editor -->
+  <section id="editor" class="help-section">
+    <h2><span class="section-num">2</span> El editor</h2>
+    <figure class="figure">
+      <img
+        src="assets/help/editor-overview.svg"
+        alt="Esquema del editor: barra superior, barra de ornamentos, bloques con la tablatura y panel de notas."
+        loading="lazy"
+      />
+      <figcaption>Partes principales de la pantalla del editor.</figcaption>
+    </figure>
+
+    <h3>Barra superior</h3>
+    <ul class="feature-list">
+      <li><strong>Título, palo y tonalidad:</strong> datos de la tablatura que aparecen en la cabecera y en la impresión.</li>
+      <li><strong>Exportar JSON:</strong> descarga la tablatura como archivo (copia de seguridad o para otro dispositivo).</li>
+      <li><strong>Exportar PDF:</strong> genera un PDF listo para guardar o compartir.</li>
+      <li><strong>Imprimir:</strong> abre un diálogo con las opciones de impresión.</li>
+      <li><strong>Importar:</strong> carga un archivo JSON exportado antes.</li>
+      <li><strong>Panel de notas:</strong> muestra siempre el panel de entrada de trastes (útil en tablet o escritorio).</li>
+      <li><strong>Limpiar:</strong> borra todo el contenido de la tablatura actual (pide confirmación).</li>
+    </ul>
+
+    <h3>Bloques</h3>
+    <p>Una tablatura se divide en bloques (por ejemplo, introducción, falseta, estribillo). Cada bloque tiene:</p>
+    <ul class="feature-list">
+      <li><strong>Título editable</strong> para nombrarlo.</li>
+      <li><strong>Colapsar / expandir</strong> para ocultarlo y ahorrar espacio.</li>
+      <li><strong>Subir / bajar</strong> para reordenar bloques.</li>
+      <li><strong>Duplicar</strong> para copiar el bloque completo.</li>
+      <li><strong>Eliminar</strong> (con confirmación).</li>
+      <li><strong>Añadir líneas</strong> para crear una nueva tanda dentro del bloque.</li>
+    </ul>
+
+    <h3>Tandas de líneas</h3>
+    <p>Dentro de cada bloque puedes tener varias tandas de seis líneas (los pentagramas de guitarra). Cada tanda se puede:</p>
+    <ul class="feature-list">
+      <li>Subir, bajar, duplicar o eliminar con los iconos de su cabecera.</li>
+      <li>Añadir o quitar columnas con <span class="kbd-inline">–</span> y <span class="kbd-inline">+</span>, junto al contador de columnas.</li>
+      <li>Insertar una columna <strong>antes</strong> o <strong>después</strong> de la seleccionada y <strong>eliminar</strong> la columna seleccionada. Estos iconos solo aparecen en la línea que tiene una celda seleccionada.</li>
+    </ul>
+
+    <h3>Columnas y etiquetas</h3>
+    <p>Cada columna es un instante de tiempo. Bajo la tablatura hay un campo de <strong>etiqueta</strong> por columna, ideal para anotar el acorde o el número de compás.</p>
+  </section>
+
+  <!-- 3 · Introducir notas -->
+  <section id="notas" class="help-section">
+    <h2><span class="section-num">3</span> Introducir notas</h2>
+    <ol class="steps">
+      <li><strong>Selecciona una celda:</strong> toca la intersección de una cuerda y una columna. La celda se resalta en azul.</li>
+      <li><strong>Escribe el traste</strong> con el panel de notas (móvil) o el teclado (escritorio). Se admiten de <code>0</code> a <code>24</code> y la marca <code>X</code>.</li>
+      <li>La nota aparece sobre la línea de la cuerda correspondiente.</li>
+    </ol>
+
+    <h3>Panel de notas</h3>
+    <p>En móvil aparece abajo al seleccionar una celda. Sus botones son:</p>
+    <ul class="feature-list">
+      <li><strong>▲ / ▼:</strong> sube o baja un traste.</li>
+      <li><strong>0 – 12:</strong> escribe ese traste directamente.</li>
+      <li><strong>X:</strong> marca la cuerda como no tocada.</li>
+      <li><strong>Borrar</strong> (icono de retroceso): deja la celda vacía.</li>
+    </ul>
+    <p>Si no cabe en la pantalla, puedes desplazar el panel horizontalmente.</p>
+    <p class="note">La tablatura flamenca no usa figuras de duración (corcheas, negras…): la duración se expresa mediante la posición de las notas.</p>
+  </section>
+
+  <!-- 4 · Ornamentos -->
+  <section id="ornamentos" class="help-section">
+    <h2><span class="section-num">4</span> Ornamentos flamencos</h2>
+    <figure class="figure">
+      <img
+        src="assets/help/tablature-ornaments.svg"
+        alt="Tablatura de ejemplo con compás, doble compás, ligadura, trémolo, rasgueo y flechas de dirección."
+        loading="lazy"
+      />
+      <figcaption>Ejemplos de ornamentos sobre la tablatura.</figcaption>
+    </figure>
+
+    <h3>Cómo se insertan</h3>
+    <ul class="feature-list">
+      <li>Selecciona una celda y pulsa el botón del ornamento en la <strong>barra de ornamentos</strong>.</li>
+      <li>O <strong>mantén pulsada</strong> una celda (más de medio segundo) para abrir el menú rápido de ornamentos.</li>
+    </ul>
+
+    <h3>Catálogo</h3>
+    <div class="ornament-grid">
+      @for (o of ornaments; track o.type) {
+        <div class="ornament-item">
+          <span class="ornament-symbol">{{ o.symbol }}</span>
+          <div class="ornament-text">
+            <strong>{{ o.label }}</strong>
+            <span>{{ o.description }}</span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <h3>Ligaduras</h3>
+    <p>
+      Una ligadura se forma con dos ornamentos: <strong>Ligadura inicio</strong> en la primera
+      nota y <strong>Ligadura fin</strong> en la última. Se dibuja un arco entre ambas. Puedes
+      pulsar el arco para seleccionarlo.
+    </p>
+
+    <h3>Trémolo</h3>
+    <p>
+      Selecciona una celda y pulsa <strong>Trémolo</strong> (o <span class="kbd">Mayús + T</span>).
+      La nota se repite cuatro veces y aparece un editor para escribir los cuatro trastes. Vuelve a
+      pulsarlo para quitarlo.
+    </p>
+
+    <h3>Eliminar un ornamento</h3>
+    <p>Pulsa sobre el ornamento en la tablatura para seleccionarlo y usa el menú de acciones que aparece.</p>
+
+    <div class="callout">
+      Los ornamentos se dibujan a la derecha de la nota con una separación fija, y la columna se
+      ensancha solo lo necesario para que no se solapen con la siguiente.
+    </div>
+  </section>
+
+  <!-- 5 · Acordes -->
+  <section id="acordes" class="help-section">
+    <h2><span class="section-num">5</span> Acordes</h2>
+    <div class="two-col">
+      <div>
+        <p>
+          La sección <strong>Acordes</strong> guarda las posturas en nomenclatura española
+          (DO, RE, MI, FA, SOL, LA, SI), con los palos recomendados para cada una.
+        </p>
+        <ul class="feature-list">
+          <li><strong>Nuevo acorde:</strong> crea una postura personalizada (nombre, nota raíz, palos y traste por cuerda).</li>
+          <li><strong>Restablecer:</strong> elimina los acordes personalizados y conserva los predefinidos.</li>
+          <li><strong>Importar en la tablatura:</strong> selecciona una columna y pulsa <strong>Acorde</strong> en la barra de ornamentos; elige el acorde y se colocarán todas sus notas.</li>
+        </ul>
+      </div>
+      <figure class="figure figure-narrow">
+        <img
+          src="assets/help/chord-diagram.svg"
+          alt="Diagrama del acorde LA Flamenco por medio, con cuerdas al aire y una cuerda no tocada."
+          loading="lazy"
+        />
+        <figcaption>Ejemplo de postura de acorde.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 6 · Exportar, importar e imprimir -->
+  <section id="exportar" class="help-section">
+    <h2><span class="section-num">6</span> Exportar, importar e imprimir</h2>
+    <div class="cards">
+      <div class="mini-card">
+        <h3>Exportar JSON</h3>
+        <p>Descarga la tablatura como archivo. Úsalo como copia de seguridad o para pasarla a otro dispositivo.</p>
+      </div>
+      <div class="mini-card">
+        <h3>Importar</h3>
+        <p>Carga un archivo JSON exportado antes. También puedes importar desde la lista de tablaturas.</p>
+      </div>
+      <div class="mini-card">
+        <h3>Exportar PDF</h3>
+        <p>Genera un PDF con la tablatura, listo para guardar o compartir.</p>
+      </div>
+      <div class="mini-card">
+        <h3>Imprimir</h3>
+        <p>Abre un diálogo con la orientación y los datos que quieres incluir.</p>
+      </div>
+    </div>
+    <h3>Opciones de impresión</h3>
+    <ul class="feature-list">
+      <li><strong>Orientación:</strong> vertical o apaisado.</li>
+      <li><strong>Incluir título</strong> y <strong>palo y tonalidad</strong>.</li>
+      <li><strong>Autor:</strong> se muestra bajo el título.</li>
+      <li>El pie de página incluye el nombre de la tablatura y el número de página (<code>X / Y</code>).</li>
+    </ul>
+  </section>
+
+  <!-- 7 · Panel de notas -->
+  <section id="panel-notas" class="help-section">
+    <h2><span class="section-num">7</span> Panel de notas</h2>
+    <p>
+      En móvil, el panel de notas aparece automáticamente al seleccionar una celda. En tablet o
+      escritorio está oculto por defecto, pero puedes forzarlo con la casilla
+      <strong>Panel de notas</strong> de la barra superior.
+    </p>
+    <p>La preferencia se recuerda entre sesiones.</p>
+  </section>
+
+  <!-- 8 · Instalación y datos -->
+  <section id="datos" class="help-section">
+    <h2><span class="section-num">8</span> Instalación y datos</h2>
+    <ul class="feature-list">
+      <li><strong>Instalar como app:</strong> usa «Añadir a pantalla de inicio» del navegador. Se abrirá a pantalla completa.</li>
+      <li><strong>Sin conexión:</strong> funciona offline. El contenido se cachea y tus datos se guardan en el dispositivo.</li>
+      <li><strong>Actualizaciones:</strong> cuando hay una versión nueva, aparece un aviso para actualizar.</li>
+      <li><strong>Copia de seguridad:</strong> como los datos viven en el navegador, exporta a JSON de vez en cuando.</li>
+    </ul>
+  </section>
+
+  <!-- 9 · Atajos de teclado -->
+  <section id="atajos" class="help-section">
+    <h2><span class="section-num">9</span> Atajos de teclado</h2>
+    <p>Disponibles en escritorio cuando hay una celda seleccionada:</p>
+    <table class="shortcuts">
+      <thead>
+        <tr>
+          <th>Teclas</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (s of shortcuts; track s.keys) {
+          <tr>
+            <td><span class="kbd">{{ s.keys }}</span></td>
+            <td>{{ s.action }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 10 · Consejos -->
+  <section id="consejos" class="help-section">
+    <h2><span class="section-num">10</span> Consejos</h2>
+    <ul class="feature-list">
+      <li>Usa las etiquetas de columna para indicar acordes o compases.</li>
+      <li>Organiza la tablatura en bloques para separar secciones.</li>
+      <li>Exporta a JSON antes de hacer cambios grandes.</li>
+      <li>En móvil, gira el dispositivo a horizontal si necesitas ver más columnas a la vez.</li>
+    </ul>
+  </section>
+</article>

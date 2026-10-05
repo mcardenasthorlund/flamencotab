@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" width="960" height="620" role="img" aria-label="Esquema de la pantalla del editor: barra superior, barra de ornamentos, bloques con la tablatura y panel de notas">
+  <rect width="960" height="620" fill="#f8fafc"/>
+  <rect x="20" y="20" width="920" height="592" rx="14" fill="#ffffff" stroke="#e2e8f0"/>
+
+  <!-- 1 · Barra superior -->
+  <rect x="40" y="40" width="880" height="80" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="58" y="66" font-size="13" font-weight="700" fill="#0f172a">Barra superior</text>
+  <text x="58" y="86" font-size="11" fill="#64748b">Título · palo · tonalidad · exportar · imprimir · importar · panel de notas</text>
+  <g fill="#ffffff" stroke="#e2e8f0">
+    <rect x="58" y="94" width="150" height="18" rx="4"/>
+    <rect x="216" y="94" width="130" height="18" rx="4"/>
+    <rect x="354" y="94" width="86" height="18" rx="4"/>
+    <rect x="448" y="94" width="86" height="18" rx="4"/>
+    <rect x="542" y="94" width="68" height="18" rx="4"/>
+    <rect x="618" y="94" width="68" height="18" rx="4"/>
+    <rect x="694" y="94" width="94" height="18" rx="4"/>
+  </g>
+
+  <!-- 2 · Barra de ornamentos -->
+  <rect x="40" y="136" width="880" height="72" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="58" y="160" font-size="13" font-weight="700" fill="#0f172a">Barra de ornamentos</text>
+  <g fill="#ffffff" stroke="#e2e8f0">
+    <rect x="56" y="168" width="60" height="30" rx="6"/>
+    <rect x="124" y="168" width="60" height="30" rx="6"/>
+    <rect x="192" y="168" width="60" height="30" rx="6"/>
+    <rect x="260" y="168" width="60" height="30" rx="6"/>
+    <rect x="328" y="168" width="60" height="30" rx="6"/>
+    <rect x="396" y="168" width="60" height="30" rx="6"/>
+    <rect x="464" y="168" width="60" height="30" rx="6"/>
+    <rect x="532" y="168" width="60" height="30" rx="6"/>
+    <rect x="600" y="168" width="60" height="30" rx="6"/>
+    <rect x="668" y="168" width="60" height="30" rx="6"/>
+    <rect x="736" y="168" width="72" height="30" rx="6" stroke="#bfdbfe" fill="#eff6ff"/>
+  </g>
+  <!-- Glifos de los botones -->
+  <g stroke="#0f172a" stroke-width="2" stroke-linecap="round">
+    <line x1="86" y1="176" x2="86" y2="190"/>
+    <line x1="150" y1="176" x2="150" y2="190"/>
+    <line x1="158" y1="176" x2="158" y2="190" stroke-width="3"/>
+    <line x1="222" y1="176" x2="222" y2="190" stroke-width="3"/>
+    <line x1="229" y1="176" x2="229" y2="190" stroke-width="1.5"/>
+    <line x1="286" y1="176" x2="286" y2="190" stroke-width="1.5"/>
+    <line x1="293" y1="176" x2="293" y2="190" stroke-width="3"/>
+  </g>
+  <g fill="#0f172a">
+    <circle cx="236" cy="180" r="1.6"/><circle cx="236" cy="186" r="1.6"/>
+    <circle cx="279" cy="180" r="1.6"/><circle cx="279" cy="186" r="1.6"/>
+  </g>
+  <g fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round">
+    <path d="M 346 188 Q 358 176 370 188"/>
+    <path d="M 414 188 Q 426 176 438 188"/>
+  </g>
+  <text x="494" y="189" font-size="14" font-weight="700" fill="#2563eb" text-anchor="middle">T</text>
+  <path d="M 562 190 C 570 185 554 180 562 175 C 570 170 554 165 562 160" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/>
+  <polygon points="562,156 557,165 567,165" fill="#2563eb"/>
+  <line x1="630" y1="189" x2="630" y2="170" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/>
+  <polygon points="630,166 625,175 635,175" fill="#2563eb"/>
+  <line x1="698" y1="166" x2="698" y2="185" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/>
+  <polygon points="698,189 693,180 703,180" fill="#2563eb"/>
+  <g stroke="#2563eb" stroke-width="1.6">
+    <line x1="762" y1="172" x2="762" y2="192"/>
+    <line x1="772" y1="172" x2="772" y2="192"/>
+    <line x1="782" y1="172" x2="782" y2="192"/>
+    <line x1="757" y1="178" x2="787" y2="178"/>
+    <line x1="757" y1="186" x2="787" y2="186"/>
+  </g>
+
+  <!-- 3 · Bloques, tandas y tablatura -->
+  <rect x="40" y="224" width="880" height="268" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="58" y="248" font-size="13" font-weight="700" fill="#0f172a">Bloques, tandas de líneas y tablatura</text>
+  <rect x="56" y="260" width="848" height="216" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+  <rect x="72" y="274" width="180" height="18" rx="4" fill="#f1f5f9"/>
+  <g fill="#f5f3ff" stroke="#ddd6fe">
+    <rect x="766" y="274" width="18" height="18" rx="4"/>
+    <rect x="790" y="274" width="18" height="18" rx="4"/>
+    <rect x="814" y="274" width="18" height="18" rx="4"/>
+    <rect x="838" y="274" width="18" height="18" rx="4"/>
+    <rect x="862" y="274" width="18" height="18" rx="4"/>
+  </g>
+  <g fill="#f8fafc" stroke="#e2e8f0">
+    <rect x="72" y="302" width="18" height="18" rx="4"/>
+    <rect x="120" y="302" width="18" height="18" rx="4"/>
+  </g>
+  <text x="100" y="315" font-size="9" fill="#64748b" text-anchor="middle">8 col.</text>
+
+  <!-- Tablatura -->
+  <rect x="72" y="332" width="816" height="130" rx="6" fill="#fafafa" stroke="#e2e8f0"/>
+  <g stroke="#cbd5e1">
+    <line x1="104" y1="352" x2="872" y2="352" stroke-width="1"/>
+    <line x1="104" y1="374" x2="872" y2="374" stroke-width="1.5"/>
+    <line x1="104" y1="396" x2="872" y2="396" stroke-width="2"/>
+    <line x1="104" y1="418" x2="872" y2="418" stroke-width="2.5"/>
+    <line x1="104" y1="440" x2="872" y2="440" stroke-width="3"/>
+    <line x1="104" y1="462" x2="872" y2="462" stroke-width="3.5"/>
+  </g>
+  <g fill="#64748b" font-size="9" text-anchor="middle">
+    <text x="92" y="355">1</text><text x="92" y="377">2</text><text x="92" y="399">3</text>
+    <text x="92" y="421">4</text><text x="92" y="443">5</text><text x="92" y="465">6</text>
+  </g>
+  <g font-size="11" font-weight="700" fill="#0f172a" text-anchor="middle">
+    <rect x="168" y="342" width="16" height="15" rx="3" fill="#fff"/><text x="176" y="354">0</text>
+    <rect x="168" y="386" width="16" height="15" rx="3" fill="#fff"/><text x="176" y="398">2</text>
+    <rect x="240" y="342" width="16" height="15" rx="3" fill="#fff"/><text x="248" y="354">3</text>
+    <rect x="240" y="386" width="16" height="15" rx="3" fill="#fff"/><text x="248" y="398">1</text>
+    <rect x="312" y="342" width="16" height="15" rx="3" fill="#fff"/><text x="320" y="354">0</text>
+    <rect x="312" y="386" width="16" height="15" rx="3" fill="#fff"/><text x="320" y="398">0</text>
+    <rect x="384" y="342" width="16" height="15" rx="3" fill="#fff"/><text x="392" y="354">0</text>
+    <rect x="384" y="386" width="16" height="15" rx="3" fill="#fff"/><text x="392" y="398">1</text>
+  </g>
+  <path d="M 176 340 Q 212 318 248 340" fill="none" stroke="#2563eb" stroke-width="2"/>
+  <line x1="460" y1="336" x2="460" y2="470" stroke="#0f172a" stroke-width="2.2"/>
+
+  <!-- 4 · Panel de notas -->
+  <rect x="40" y="508" width="880" height="84" rx="8" fill="#ffffff" stroke="#2563eb"/>
+  <text x="58" y="532" font-size="13" font-weight="700" fill="#0f172a">Panel de notas (móvil)</text>
+  <g>
+    <rect x="56" y="544" width="40" height="36" rx="6" fill="#2563eb"/>
+    <polygon points="76,556 68,568 84,568" fill="#ffffff"/>
+    <rect x="102" y="544" width="40" height="36" rx="6" fill="#2563eb"/>
+    <polygon points="122,568 114,556 130,556" fill="#ffffff"/>
+    <rect x="150" y="544" width="2" height="36" fill="#e2e8f0"/>
+  </g>
+  <g fill="#f8fafc" stroke="#cbd5e1">
+    <rect x="160" y="544" width="40" height="36" rx="6"/>
+    <rect x="206" y="544" width="40" height="36" rx="6"/>
+    <rect x="252" y="544" width="40" height="36" rx="6"/>
+    <rect x="298" y="544" width="40" height="36" rx="6"/>
+    <rect x="344" y="544" width="40" height="36" rx="6"/>
+    <rect x="390" y="544" width="40" height="36" rx="6"/>
+    <rect x="436" y="544" width="40" height="36" rx="6"/>
+    <rect x="482" y="544" width="40" height="36" rx="6"/>
+    <rect x="528" y="544" width="40" height="36" rx="6"/>
+    <rect x="574" y="544" width="40" height="36" rx="6"/>
+    <rect x="620" y="544" width="40" height="36" rx="6"/>
+    <rect x="666" y="544" width="40" height="36" rx="6"/>
+    <rect x="712" y="544" width="40" height="36" rx="6"/>
+    <rect x="758" y="544" width="40" height="36" rx="6"/>
+    <rect x="804" y="544" width="40" height="36" rx="6" fill="#2563eb" stroke="#2563eb"/>
+  </g>
+  <g fill="#0f172a" font-size="13" font-weight="600" text-anchor="middle">
+    <text x="180" y="568">0</text><text x="226" y="568">1</text><text x="272" y="568">2</text>
+    <text x="318" y="568">3</text><text x="364" y="568">4</text><text x="410" y="568">5</text>
+    <text x="456" y="568">6</text><text x="502" y="568">7</text><text x="548" y="568">8</text>
+    <text x="594" y="568">9</text><text x="640" y="568">10</text><text x="686" y="568">11</text>
+    <text x="732" y="568">12</text><text x="778" y="568">X</text>
+  </g>
+  <g fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round">
+    <path d="M 818 556 h 12 l 6 6 -6 6 h -12 z"/>
+    <line x1="823" y1="562" x2="830" y2="562"/>
+  </g>
+</svg>

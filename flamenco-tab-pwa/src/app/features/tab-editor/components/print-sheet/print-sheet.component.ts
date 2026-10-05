@@ -78,7 +78,51 @@ export class PrintSheetComponent implements AfterViewInit, OnDestroy {
     this.measureQueued = true;
     requestAnimationFrame(() => {
       this.measureQueued = false;
+      this.applyOrnamentAreas();
       this.measureSlurs();
+    });
+  }
+
+  /**
+   * Reserva en cada columna el ancho real de su grupo de ornamentos (más una
+   * separación fija) para que el borde derecho de la columna se desplace con
+   * ellos sin pisar la siguiente, manteniendo la nota anclada a su slot.
+   */
+  private applyOrnamentAreas(): void {
+    const trailing = 5;
+    this.gridRefs.forEach((grid) => {
+      const gctx = grid.context();
+      if (!gctx) return;
+      const tabEl = grid.element.nativeElement as HTMLElement;
+      const gutter = tabEl.querySelector('.gutter') as HTMLElement | null;
+      const cols = Array.from(tabEl.children).filter(
+        (el): el is HTMLElement => el.classList.contains('column')
+      );
+      const n = cols.length;
+      if (!n) return;
+      const available = tabEl.clientWidth - (gutter?.offsetWidth ?? 0);
+      const base = available / n;
+      const wrap = tabEl.closest('.tab-wrap');
+      const labelCells = wrap
+        ? (Array.from(
+            wrap.querySelectorAll('.tab-labels > .label-cell')
+          ) as HTMLElement[])
+        : [];
+      const areas = cols.map((col) => {
+        const row = col.querySelector('.ornaments') as HTMLElement | null;
+        const rowWidth = row ? row.offsetWidth : 0;
+        return Math.max(0, Math.round(rowWidth + trailing - base / 2));
+      });
+      cols.forEach((col, i) => {
+        const area = areas[i];
+        col.style.flexBasis = `${area}px`;
+        col.style.setProperty('--orn-area', `${area}px`);
+        const label = labelCells[i];
+        if (label) {
+          label.style.flexBasis = `${area}px`;
+          label.style.setProperty('--orn-area', `${area}px`);
+        }
+      });
     });
   }
 
@@ -243,11 +287,6 @@ export class PrintSheetComponent implements AfterViewInit, OnDestroy {
     return column.ornaments.filter(
       (o) => o.positionIndex === positionIndex && isLineOrnament(o.type)
     );
-  }
-
-  columnGrow(column: TabColumn): number {
-    const count = column.ornaments.filter((o) => isLineOrnament(o.type)).length;
-    return Math.max(1, count);
   }
 
   textSymbols(column: TabColumn, positionIndex: number): string[] {

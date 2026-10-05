@@ -1,0 +1,349 @@
+.help {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+}
+
+/* ---------- Cabecera / hero ---------- */
+.help-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.help-hero h1 {
+  margin: 0;
+  font-size: 1.9rem;
+  line-height: 1.2;
+}
+
+.lead {
+  margin: 0;
+  max-width: 62ch;
+  color: #475569;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.help-index {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.index-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #2563eb;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.index-chip:hover {
+  background: #dbeafe;
+  border-color: #93c5fd;
+}
+
+/* ---------- Secciones ---------- */
+.help-section {
+  scroll-margin-top: 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.help-section h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 1.25rem;
+}
+
+.section-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.help-section h3 {
+  margin: 0.6rem 0 0;
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+.help-section p {
+  margin: 0;
+  color: #334155;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+/* ---------- Listas ---------- */
+.feature-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.feature-list li {
+  position: relative;
+  padding-left: 1.35rem;
+  color: #334155;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.feature-list li::before {
+  content: '';
+  position: absolute;
+  left: 0.1rem;
+  top: 0.55rem;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2563eb;
+}
+
+.steps {
+  margin: 0;
+  padding-left: 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: #334155;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+/* ---------- Tarjetas ---------- */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+.mini-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+}
+
+.mini-card h3 {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  color: #0f172a;
+}
+
+.mini-card p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+/* ---------- Figuras ---------- */
+.figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.figure figcaption {
+  font-size: 0.78rem;
+  color: #64748b;
+  text-align: center;
+}
+
+.figure-narrow img {
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+/* ---------- Avisos ---------- */
+.callout {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  color: #1e3a8a;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.note {
+  font-size: 0.82rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+/* ---------- Ornamentos ---------- */
+.ornament-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.6rem;
+}
+
+.ornament-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.7rem 0.8rem;
+}
+
+.ornament-symbol {
+  flex: none;
+  width: 2.1rem;
+  height: 2.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eff6ff;
+  color: #2563eb;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.ornament-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.ornament-text strong {
+  font-size: 0.88rem;
+  color: #0f172a;
+}
+
+.ornament-text span {
+  font-size: 0.78rem;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+/* ---------- Dos columnas ---------- */
+.two-col {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.two-col > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+@media (max-width: 720px) {
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Atajos ---------- */
+.shortcuts {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.shortcuts th,
+.shortcuts td {
+  text-align: left;
+  padding: 0.55rem 0.7rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.shortcuts th {
+  color: #64748b;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.shortcuts td {
+  color: #334155;
+}
+
+.kbd,
+.kbd-inline {
+  display: inline-block;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.kbd {
+  padding: 0.1rem 0.45rem;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.kbd-inline {
+  min-width: 1.1rem;
+  text-align: center;
+  padding: 0 0.3rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+code {
+  background: #f1f5f9;
+  border-radius: 4px;
+  padding: 0.05rem 0.3rem;
+  font-size: 0.85em;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  .help {
+    padding: 1.25rem 0.9rem 2.5rem;
+  }
+
+  .help-hero h1 {
+    font-size: 1.55rem;
+  }
+}

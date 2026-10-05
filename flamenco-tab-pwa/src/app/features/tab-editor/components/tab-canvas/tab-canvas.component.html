@@ -114,7 +114,7 @@
               }
             </div>
 @for (col of set.columns; track col.id; let cIdx = $index) {
-              <div class="tab-column" [style.flex-grow]="columnGrow(col)">
+              <div class="tab-column">
                 @if (lineOrnaments(col, cIdx).length) {
                   <div class="ornament-line-row">
                     @for (orn of lineOrnaments(col, cIdx); track orn.id) {
@@ -162,7 +162,7 @@
           <div class="label-row">
             <div class="label-gutter"></div>
             @for (col of set.columns; track col.id; let cIdx = $index) {
-              <div class="label-cell" [style.flex-grow]="columnGrow(col)">
+              <div class="label-cell">
                 <input
                   class="column-label"
                   type="text"

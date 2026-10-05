@@ -30,5 +30,12 @@ export const routes: Routes = [
         (m) => m.ListPageComponent
       ),
   },
+  {
+    path: 'help',
+    loadComponent: () =>
+      import('./features/help/pages/help-page/help-page.component').then(
+        (m) => m.HelpPageComponent
+      ),
+  },
   { path: '**', redirectTo: 'tabs' },
 ];
