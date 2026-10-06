@@ -16,7 +16,7 @@ Aplicación web progresiva (PWA) para crear, editar y guardar tablaturas de guit
 
 > 🎯 **Filosofía:** sin cuentas, sin servidores, sin bases de datos remotas. Tu música vive en tu dispositivo (LocalStorage) y puedes exportarla/importarla como JSON.
 
-> 🏷️ **Versión actual:** `0.7-beta`
+> 🏷️ **Versión actual:** `0.71-beta`
 
 ---
 

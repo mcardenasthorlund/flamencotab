@@ -21,7 +21,7 @@
       </span>
     </a>
 
-    <!-- Indicador de vista (centro) -->
+    <!-- Navegación de escritorio (centro) -->
     <nav class="nav-center" aria-label="Navegación principal">
       <a routerLink="/tabs" routerLinkActive="active">Tablaturas</a>
       <a
@@ -47,6 +47,78 @@
           <span>Actualizar</span>
         </button>
       }
+
+      <button
+        type="button"
+        class="nav-toggle"
+        (click)="toggleMenu()"
+        [attr.aria-expanded]="menuOpen()"
+        aria-controls="mobile-menu"
+        [attr.aria-label]="menuOpen() ? 'Cerrar menú' : 'Abrir menú'"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
     </div>
   </div>
 </header>
+
+@if (menuOpen()) {
+  <div class="drawer-backdrop" (click)="closeMenu()" aria-hidden="true"></div>
+}
+
+<!-- Menú lateral (móvil) -->
+<aside
+  id="mobile-menu"
+  class="mobile-drawer"
+  [class.open]="menuOpen()"
+  [attr.aria-hidden]="!menuOpen()"
+  [attr.inert]="menuOpen() ? null : ''"
+  aria-label="Menú de navegación"
+>
+  <div class="drawer-head">
+    <span class="brand-logo" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="brand-icon">
+        <line x1="4" y1="6" x2="20" y2="6" />
+        <line x1="4" y1="10" x2="20" y2="10" />
+        <line x1="4" y1="14" x2="20" y2="14" />
+        <line x1="4" y1="18" x2="20" y2="18" />
+        <circle cx="8" cy="6" r="1" fill="currentColor" />
+        <circle cx="13" cy="10" r="1" fill="currentColor" />
+        <circle cx="17" cy="14" r="1" fill="currentColor" />
+        <circle cx="11" cy="18" r="1" fill="currentColor" />
+      </svg>
+    </span>
+    <div class="drawer-brand">
+      <span class="drawer-title">Flamenco<span class="brand-accent">Tab</span></span>
+      <span class="drawer-version">v{{ version }}</span>
+    </div>
+    <button type="button" class="drawer-close" (click)="closeMenu()" aria-label="Cerrar menú">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
+    </button>
+  </div>
+
+  <nav class="drawer-nav" aria-label="Navegación móvil">
+    <a routerLink="/tabs" routerLinkActive="active" (click)="closeMenu()">Tablaturas</a>
+    <a
+      routerLink="/editor"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      (click)="closeMenu()"
+      >Editor</a
+    >
+    <a routerLink="/library" routerLinkActive="active" (click)="closeMenu()">Acordes</a>
+    <a routerLink="/help" routerLinkActive="active" (click)="closeMenu()">Ayuda</a>
+    <a routerLink="/settings" routerLinkActive="active" (click)="closeMenu()">Ajustes</a>
+  </nav>
+
+  <div class="drawer-foot">
+    <span class="brand-tag">Tablaturas · PWA</span>
+  </div>
+</aside>

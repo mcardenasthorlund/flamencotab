@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, HostListener, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { PwaUpdateService } from '../../../core/services/pwa-update.service';
 import { APP_VERSION } from '../../../core/constants/app-version.constant';
@@ -13,6 +13,7 @@ import { APP_VERSION } from '../../../core/constants/app-version.constant';
 export class HeaderComponent {
   readonly version = APP_VERSION;
   readonly updateAvailable = signal(false);
+  readonly menuOpen = signal(false);
   private updateSub: unknown;
 
   constructor(private pwaUpdate: PwaUpdateService) {
@@ -23,5 +24,18 @@ export class HeaderComponent {
 
   refreshApp(): void {
     this.pwaUpdate.activateUpdate();
+  }
+
+  toggleMenu(): void {
+    this.menuOpen.update((open) => !open);
+  }
+
+  closeMenu(): void {
+    this.menuOpen.set(false);
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.closeMenu();
   }
 }

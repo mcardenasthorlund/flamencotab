@@ -1,3 +1,10 @@
+/* El host no genera caja: el navbar, el fondo y el menú lateral pasan a ser
+   hijos directos del layout raíz. Así el navbar sigue siendo `sticky` y el menú
+   lateral compite en z-index con el resto de la página (no queda atrapado). */
+:host {
+  display: contents;
+}
+
 .navbar {
   position: sticky;
   top: 0;
@@ -119,20 +126,176 @@
   padding: 0.4rem 0.7rem;
 }
 
-@media (max-width: 640px) {
-  .brand-tag {
-    display: none;
+/* Botón hamburguesa (solo móvil) */
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #334155;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.nav-toggle:hover {
+  background: #f8fafc;
+}
+
+.nav-toggle svg {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+/* Fondo oscurecido */
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  z-index: 1390;
+  display: none;
+  animation: drawer-fade 0.2s ease;
+}
+
+/* Menú lateral deslizante (por la derecha) */
+.mobile-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100dvh;
+  width: min(82vw, 320px);
+  background: #ffffff;
+  border-left: 1px solid #e2e8f0;
+  box-shadow: -8px 0 24px rgba(15, 23, 42, 0.14);
+  z-index: 1400;
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+  display: none;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 0.5rem;
+  overflow-y: auto;
+}
+
+.mobile-drawer.open {
+  transform: translateX(0);
+}
+
+.drawer-head {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.drawer-brand {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  flex: 1;
+  min-width: 0;
+}
+
+.drawer-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #0f172a;
+}
+
+.drawer-version {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.drawer-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.drawer-close:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.drawer-close svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.drawer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin-top: 0.5rem;
+}
+
+.drawer-nav a {
+  padding: 0.7rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #334155;
+  text-decoration: none;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.drawer-nav a:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.drawer-nav a.active {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.drawer-foot {
+  margin-top: auto;
+  padding-top: 0.9rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+@keyframes drawer-fade {
+  from {
+    opacity: 0;
   }
-  .nav-center a {
-    font-size: 0.75rem;
-    padding: 0.35rem 0.55rem;
+  to {
+    opacity: 1;
   }
 }
 
-/* En pantallas muy estrechas se muestra solo el logo para que quepan
-   todas las secciones de navegación. */
-@media (max-width: 440px) {
-  .brand-text {
+/* ---------- Móvil: menú hamburguesa ---------- */
+@media (max-width: 768px) {
+  .nav-center {
     display: none;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
+  }
+
+  .mobile-drawer {
+    display: flex;
+  }
+
+  .drawer-backdrop {
+    display: block;
   }
 }
