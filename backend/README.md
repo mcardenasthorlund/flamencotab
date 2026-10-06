@@ -8,6 +8,9 @@ por usuario con sus documentos en JSON.
 - **Sin dependencias:** PHP 8.0+ y Apache con `mod_rewrite` (o `?r=/ruta`).
 - **Dos barreras de seguridad:** `.htaccess` (deny) + JSON envuelto en PHP.
 
+> 📘 **¿Quieres conectar otra app?** Consulta [`INTEGRATION.md`](./INTEGRATION.md):
+> contrato completo de la API, módulo cliente reutilizable y checklist paso a paso.
+
 ## Estructura
 
 ```
