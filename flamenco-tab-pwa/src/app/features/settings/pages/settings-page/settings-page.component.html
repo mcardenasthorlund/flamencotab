@@ -1,0 +1,147 @@
+<div class="settings">
+  <div class="settings-head">
+    <h2>Ajustes</h2>
+    <p class="subtitle">Preferencias de la aplicación</p>
+  </div>
+
+  <section class="card sync-card">
+    <div class="sync-row">
+      <div class="sync-info">
+        <h3>Sincronización en la nube</h3>
+        <p>
+          Guarda tus tablaturas y acordes en la nube para tenerlos en todos tus
+          dispositivos. Si lo desactivas, todo se queda solo en este dispositivo.
+        </p>
+      </div>
+
+      <label class="switch" aria-label="Activar sincronización en la nube">
+        <input
+          type="checkbox"
+          [checked]="status() !== 'disabled'"
+          (change)="onToggle($event)"
+        />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="sync-status">
+      <span
+        class="status-dot"
+        [class.on]="status() === 'idle'"
+        [class.error]="status() === 'error'"
+      ></span>
+      <span class="status-text">{{ statusLabel() }}</span>
+      @if (pending() > 0) {
+        <span class="badge badge-blue">{{ pending() }} pendiente(s)</span>
+      }
+    </div>
+
+    @if (status() !== 'disabled') {
+      @if (session(); as s) {
+        <div class="account">
+          <p class="meta">
+            Sesión iniciada como <strong>{{ s.username }}</strong>
+          </p>
+          @if (lastSyncAt(); as last) {
+            <p class="meta">Última sincronización: {{ last }}</p>
+          }
+          <div class="account-actions">
+            <button class="btn btn-primary" [disabled]="busy()" (click)="syncNow()">
+              {{ busy() ? 'Sincronizando…' : 'Sincronizar ahora' }}
+            </button>
+            <button class="btn btn-secondary" [disabled]="busy()" (click)="signOut()">
+              Cerrar sesión
+            </button>
+          </div>
+
+          <div class="danger-zone">
+            <button class="btn btn-danger btn-xs" [disabled]="busy()" (click)="requestDelete()">
+              Eliminar cuenta
+            </button>
+          </div>
+        </div>
+      } @else {
+        <div class="auth">
+          <div class="auth-tabs">
+            <button
+              class="auth-tab"
+              [class.active]="mode() === 'login'"
+              (click)="setMode('login')"
+            >
+              Iniciar sesión
+            </button>
+            <button
+              class="auth-tab"
+              [class.active]="mode() === 'register'"
+              (click)="setMode('register')"
+            >
+              Crear cuenta
+            </button>
+          </div>
+
+          <label class="field">
+            <span>Usuario</span>
+            <input
+              type="text"
+              autocomplete="username"
+              placeholder="3-32 caracteres (letras, números, - o _)"
+              [ngModel]="username()"
+              (ngModelChange)="username.set($event)"
+            />
+          </label>
+
+          <label class="field">
+            <span>Contraseña</span>
+            <input
+              type="password"
+              [attr.autocomplete]="mode() === 'register' ? 'new-password' : 'current-password'"
+              placeholder="Mínimo 8 caracteres"
+              [ngModel]="password()"
+              (ngModelChange)="password.set($event)"
+              (keyup.enter)="submit()"
+            />
+          </label>
+
+          @if (localError(); as msg) {
+            <p class="error">{{ msg }}</p>
+          }
+          @if (error(); as msg) {
+            <p class="error">{{ msg }}</p>
+          }
+
+          <button
+            class="btn btn-primary auth-submit"
+            [disabled]="busy() || !canSubmit()"
+            (click)="submit()"
+          >
+            {{ busy() ? 'Un momento…' : (mode() === 'register' ? 'Crear cuenta' : 'Entrar') }}
+          </button>
+
+          <p class="meta small">
+            Si es tu primera vez, crea una cuenta. Tus datos actuales se subirán a
+            la nube tras iniciar sesión.
+          </p>
+        </div>
+      }
+    }
+  </section>
+
+  <section class="card about-card">
+    <h3>Acerca de</h3>
+    <p class="meta">Aplicación: <strong>{{ appId }}</strong></p>
+    <p class="meta">
+      Tus datos se guardan en el almacenamiento local del navegador bajo claves
+      con prefijo <code>flamenco_</code>.
+    </p>
+  </section>
+
+  @if (showDeleteConfirm()) {
+    <app-confirm-dialog
+      title="Eliminar cuenta"
+      message="Se eliminarán tu cuenta y todos tus datos en la nube (tablaturas y acordes). Los datos de este dispositivo no se tocan. Esta acción no se puede deshacer."
+      confirmText="Eliminar cuenta"
+      (confirmed)="confirmDelete()"
+      (dismissed)="showDeleteConfirm.set(false)"
+    />
+  }
+</div>

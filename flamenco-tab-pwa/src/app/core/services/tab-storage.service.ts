@@ -4,10 +4,13 @@ import { Tablature, TabBlock, LineSet, TabColumn, NoteEntry } from '../models/ta
 import { Ornament } from '../models/ornament.model';
 import { fillStrings } from '../../shared/utils/guitar.util';
 import { newId } from '../../shared/utils/array.util';
+import { SyncService } from '../sync/sync.service';
+import { SyncChange, SyncEnvelope } from '../sync/models/sync.model';
 
 const INDEX_KEY = 'flamenco_tabs_index';
 const ACTIVE_KEY = 'flamenco_active_tab_id';
 const TAB_PREFIX = 'flamenco_tab_';
+const COLLECTION = 'tabs';
 
 @Injectable({ providedIn: 'root' })
 export class TabStorageService {
@@ -15,11 +18,15 @@ export class TabStorageService {
   private saveSubject = new Subject<Tablature>();
   private autoSave$ = this.saveSubject.pipe(debounceTime(500));
 
-  constructor() {
+  constructor(private sync: SyncService) {
+    this.sync.registerHandler({
+      collection: COLLECTION,
+      applyRemote: (envelope) => this.applyRemote(envelope),
+      snapshot: () => this.snapshot(),
+    });
     this.autoSave$.subscribe((tab) => {
       tab.lastModifiedDate = new Date().toISOString();
-      this.upsertTab(tab);
-      this.persistTab(tab);
+      this.commitLocal(tab);
     });
     this.loadIndex();
   }
@@ -36,9 +43,8 @@ export class TabStorageService {
 
   saveTab(tab: Tablature): Observable<void> {
     tab.lastModifiedDate = new Date().toISOString();
-    this.upsertTab(tab);
     return new Observable<void>((subscriber) => {
-      this.persistTab(tab);
+      this.commitLocal(tab);
       subscriber.next();
       subscriber.complete();
     });
@@ -49,10 +55,14 @@ export class TabStorageService {
   }
 
   deleteTab(id: string): Observable<void> {
+    const removed = this.readFromStorage(id);
     const next = this.tabsSubject.value.filter((t) => t.id !== id);
     this.tabsSubject.next(next);
     localStorage.removeItem(TAB_PREFIX + id);
     localStorage.setItem(INDEX_KEY, JSON.stringify(next.map((t) => t.id)));
+    if (removed) {
+      this.sync.enqueue(this.toChange(removed, true));
+    }
     return new Observable<void>((subscriber) => {
       subscriber.next();
       subscriber.complete();
@@ -78,7 +88,7 @@ export class TabStorageService {
       const parsed = JSON.parse(jsonContent) as Tablature;
       if (!parsed.id || !Array.isArray(parsed.blocks)) return false;
       const normalized = this.normalizeTab(parsed);
-      this.upsertTab(normalized);
+      this.commitLocal(normalized);
       return true;
     } catch {
       return false;
@@ -86,7 +96,7 @@ export class TabStorageService {
   }
 
   createNewTab(): Tablature {
-    const id = `tab-${Date.now()}`;
+    const id = newId('tab');
     const now = new Date().toISOString();
     const tab: Tablature = {
       id,
@@ -97,7 +107,7 @@ export class TabStorageService {
       lastModifiedDate: now,
       blocks: [this.createEmptyBlock(0)],
     };
-    this.upsertTab(tab);
+    this.commitLocal(tab);
     this.setActiveTab(id);
     return tab;
   }
@@ -135,6 +145,44 @@ export class TabStorageService {
     };
   }
 
+  /** Persiste un cambio local y lo encola para sincronizar. */
+  private commitLocal(tab: Tablature): void {
+    const normalized = this.normalizeTab(tab);
+    this.upsertTab(normalized);
+    this.persistTab(normalized);
+    this.sync.enqueue(this.toChange(normalized));
+  }
+
+  private toChange(tab: Tablature, deleted = false): SyncChange {
+    return {
+      docId: tab.id,
+      collection: COLLECTION,
+      clientUpdatedAt: tab.lastModifiedDate,
+      deleted,
+      payload: deleted ? null : tab,
+      schemaVersion: 1,
+    };
+  }
+
+  private snapshot(): SyncChange[] {
+    return this.tabsSubject.value.map((tab) => this.toChange(tab));
+  }
+
+  /** Aplica un documento remoto sin re-encolarlo. */
+  private applyRemote(envelope: SyncEnvelope): void {
+    if (envelope.deleted) {
+      const next = this.tabsSubject.value.filter((t) => t.id !== envelope.docId);
+      this.tabsSubject.next(next);
+      localStorage.removeItem(TAB_PREFIX + envelope.docId);
+      localStorage.setItem(INDEX_KEY, JSON.stringify(next.map((t) => t.id)));
+      return;
+    }
+    const tab = this.normalizeTab(envelope.payload as Tablature);
+    tab.lastModifiedDate = envelope.updatedAt;
+    this.upsertTab(tab);
+    this.persistTab(tab);
+  }
+
   private upsertTab(tab: Tablature): void {
     const normalized = this.normalizeTab(tab);
     const current = this.tabsSubject.value;
@@ -169,13 +217,13 @@ export class TabStorageService {
             return existing ?? { stringNumber, fret: '' };
           });
           const ornaments: Ornament[] = (col.ornaments || []).map((o) => ({
-            id: o.id || `orn-${Date.now()}-${ci}-${Math.random()}`,
+            id: o.id || newId('orn'),
             type: o.type,
             positionIndex: o.positionIndex ?? ci,
             stringIndex: o.stringIndex,
           }));
           return {
-            id: col.id || `col-${Date.now()}-${ci}`,
+            id: col.id || newId('col'),
             index: col.index ?? ci,
             notes,
             ornaments,
@@ -187,20 +235,20 @@ export class TabStorageService {
       const rawSets = (block as unknown as { lineSets?: LineSet[] }).lineSets;
       const lineSets: LineSet[] = rawSets && rawSets.length
         ? rawSets.map((ls, li) => ({
-            id: ls.id || `line-set-${Date.now()}-${li}`,
+            id: ls.id || newId('line-set'),
             order: ls.order ?? li,
             columns: normalizeColumns(ls.columns),
           }))
         : [
             {
-              id: `line-set-${Date.now()}-${bi}`,
+              id: newId('line-set'),
               order: 0,
               columns: normalizeColumns((block as unknown as { columns?: TabColumn[] }).columns),
             },
           ];
 
       return {
-        id: block.id || `block-${Date.now()}-${bi}`,
+        id: block.id || newId('block'),
         blockOrder: block.blockOrder ?? bi,
         title: block.title ?? '',
         lineSets,

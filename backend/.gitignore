@@ -1,0 +1,5 @@
+# Configuración del backend (no versionar)
+/config/config.php
+
+# Datos de usuarios (no versionar; se crean en runtime)
+/data/

@@ -24,4 +24,6 @@ export interface Chord {
   palosRecomendados?: string[];
   positions: ChordPosition[];
   isCustom: boolean;
+  /** Última modificación (ISO). Solo para acordes personalizados/sincronización. */
+  updatedAt?: string;
 }

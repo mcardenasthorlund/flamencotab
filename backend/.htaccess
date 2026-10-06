@@ -1,0 +1,15 @@
+# FlamencoTab Sync API — raíz del backend
+Options -Indexes
+DirectoryIndex index.php
+
+# Front controller SIN mod_rewrite.
+# FallbackResource no requiere FollowSymLinks, que en algunos hostings
+# compartidos está desactivado y hace que RewriteRule devuelva un 500.
+FallbackResource /index.php
+
+# Defensa en profundidad: bloqueo de los directorios internos.
+# (El [F] no hace sustitución, así que no dispara el problema de FollowSymLinks.)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^(src|config|data)(/|$) - [F,L]
+</IfModule>

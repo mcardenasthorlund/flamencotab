@@ -37,5 +37,12 @@ export const routes: Routes = [
         (m) => m.HelpPageComponent
       ),
   },
+  {
+    path: 'settings',
+    loadComponent: () =>
+      import('./features/settings/pages/settings-page/settings-page.component').then(
+        (m) => m.SettingsPageComponent
+      ),
+  },
   { path: '**', redirectTo: 'tabs' },
 ];
