@@ -5,7 +5,10 @@ export type OrnamentType =
   | 'repeat_end'
   | 'slur_start'
   | 'slur_end'
+  | 'glisando_start'
+  | 'glisando_end'
   | 'rasgueo'
+  | 'pulgar'
   | 'arrow_up'
   | 'arrow_down'
   | 'tremolo';
@@ -16,3 +19,6 @@ export interface Ornament {
   positionIndex: number;
   stringIndex?: number;
 }
+
+/** Ornamentos que se dibujan como un par inicio/fin unido por una línea. */
+export type OrnamentPairKind = 'slur' | 'glisando';

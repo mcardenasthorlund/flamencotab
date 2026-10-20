@@ -40,5 +40,7 @@ return [
     'cors_origins' => [
         'https://appflamencotab.ideasypruebas2.es',
         'http://localhost:4200',
+        // Origen de la app nativa (Capacitor/Android).
+        'https://localhost',
     ],
 ];

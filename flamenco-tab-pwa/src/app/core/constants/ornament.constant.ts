@@ -16,8 +16,11 @@ export const ORNAMENT_META: Record<OrnamentType, OrnamentMeta> = {
   repeat_end: { type: 'repeat_end', symbol: '𝄇', label: 'Repetición fin', group: 'bar' },
   slur_start: { type: 'slur_start', symbol: '⌒', label: 'Ligadura inicio', group: 'slur' },
   slur_end: { type: 'slur_end', symbol: '⌒', label: 'Ligadura fin', group: 'slur' },
+  glisando_start: { type: 'glisando_start', symbol: '↗', label: 'Glisando inicio', group: 'slur' },
+  glisando_end: { type: 'glisando_end', symbol: '↗', label: 'Glisando fin', group: 'slur' },
   tremolo: { type: 'tremolo', symbol: 'T', label: 'Trémolo', group: 'tech' },
   rasgueo: { type: 'rasgueo', symbol: '↥', label: 'Rasgueo', group: 'direction' },
+  pulgar: { type: 'pulgar', symbol: 'p', label: 'Pulgar', group: 'direction' },
   arrow_up: { type: 'arrow_up', symbol: '↑', label: 'Arriba', group: 'direction' },
   arrow_down: { type: 'arrow_down', symbol: '↓', label: 'Abajo', group: 'direction' },
 };
@@ -25,7 +28,11 @@ export const ORNAMENT_META: Record<OrnamentType, OrnamentMeta> = {
 export const ORNAMENT_BUTTONS: OrnamentMeta[] = Object.values(ORNAMENT_META);
 
 export const QUICK_ORNAMENTS: OrnamentMeta[] = ORNAMENT_BUTTONS.filter(
-  (o) => o.type !== 'slur_start' && o.type !== 'slur_end'
+  (o) =>
+    o.type !== 'slur_start' &&
+    o.type !== 'slur_end' &&
+    o.type !== 'glisando_start' &&
+    o.type !== 'glisando_end'
 );
 
 export const LINE_ORNAMENTS: ReadonlySet<OrnamentType> = new Set<OrnamentType>([
@@ -34,6 +41,7 @@ export const LINE_ORNAMENTS: ReadonlySet<OrnamentType> = new Set<OrnamentType>([
   'repeat_start',
   'repeat_end',
   'rasgueo',
+  'pulgar',
   'arrow_up',
   'arrow_down',
 ]);

@@ -370,7 +370,8 @@
   width: 4px;
 }
 
-.ornament-line-item.line-rasgueo {
+.ornament-line-item.line-rasgueo,
+.ornament-line-item.line-pulgar {
   width: 14px;
 }
 
@@ -381,7 +382,8 @@
   --ornament-color: #0F172A;
 }
 
-.ornament-line-item.line-rasgueo::before {
+.ornament-line-item.line-rasgueo::before,
+.ornament-line-item.line-pulgar::before {
   display: none;
 }
 
@@ -396,6 +398,14 @@
   color: var(--ornament-color);
   pointer-events: auto;
   cursor: pointer;
+}
+
+/* El pulgar comparte el trazo del rasgueo pero, al no tener punta de flecha,
+   se ajusta a la misma altura que las flechas de arriba/abajo (8px de margen). */
+.ornament-line-item.line-pulgar .rasgueo-svg {
+  top: 8px;
+  bottom: 8px;
+  height: calc(100% - 16px);
 }
 
 .ornament-line-item .repeat-dots {

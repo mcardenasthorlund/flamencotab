@@ -127,10 +127,16 @@
                         @if (orn.type === 'repeat_start' || orn.type === 'repeat_end') {
                           <span class="repeat-dots"><span></span><span></span></span>
                         }
-                        @if (orn.type === 'rasgueo') {
-                          <svg class="rasgueo-svg" viewBox="0 0 12 40" preserveAspectRatio="none">
+                        @if (orn.type === 'rasgueo' || orn.type === 'pulgar') {
+                          <svg
+                            class="rasgueo-svg"
+                            [attr.viewBox]="orn.type === 'pulgar' ? '0 11 12 22' : '0 0 12 40'"
+                            preserveAspectRatio="none"
+                          >
                             <path d="M6 32 Q9 30 6 28 Q3 26 6 24 Q9 22 6 20 Q3 18 6 16 Q9 14 6 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                            <polygon points="6,2 1.5,11 10.5,11" fill="currentColor" />
+                            @if (orn.type === 'rasgueo') {
+                              <polygon points="6,2 1.5,11 10.5,11" fill="currentColor" />
+                            }
                           </svg>
                         }
                       </span>

@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TabBlock, TabColumn, NoteEntry, LineSet } from '../../../../core/models/tab.model';
-import { Ornament, OrnamentType } from '../../../../core/models/ornament.model';
+import { Ornament, OrnamentType, OrnamentPairKind } from '../../../../core/models/ornament.model';
 import { ORNAMENT_META, isLineOrnament as isLineOrnamentType } from '../../../../core/constants/ornament.constant';
 import { STRING_COUNT, STRING_NUMBERS } from '../../../../core/constants/guitar.constant';
 import { resolveNotes, isColumnTremolo } from '../../../../shared/utils/tab-render.util';
@@ -50,6 +50,7 @@ export interface SlurSelectPayload {
   id: string;
   startId: string;
   endId: string;
+  kind: OrnamentPairKind;
   blockIndex: number;
   lineSetIndex: number;
   x: number;
@@ -60,6 +61,7 @@ interface SlurPair {
   id: string;
   startId: string;
   endId: string;
+  kind: OrnamentPairKind;
   stringNumber: number;
   endStringNumber: number;
   startColumn: number;
@@ -70,11 +72,46 @@ interface SlurPath {
   id: string;
   startId: string;
   endId: string;
+  kind: OrnamentPairKind;
   gridKey: string;
   d: string;
 }
 
 const gridKey = (b: number, l: number) => `${b}-${l}`;
+
+/** Arco de ligadura entre dos notas. */
+function slurPath(x1: number, y1: number, x2: number, y2: number): string {
+  const midX = (x1 + x2) / 2;
+  const height = Math.max(14, Math.min(26, Math.abs(x2 - x1) * 0.26));
+  const cy = Math.min(y1, y2) - height;
+  return `M ${x1.toFixed(1)} ${y1.toFixed(1)} Q ${midX.toFixed(1)} ${cy.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+}
+
+/**
+ * Línea recta de glisando. Se dibuja por encima de las notas y ligeramente
+ * inclinada hacia arriba (nunca completamente horizontal), de modo que se
+ * distingue del arco de la ligadura.
+ */
+function glisandoPath(x1: number, y1: number, x2: number, y2: number): string {
+  const lift = 14;
+  const tilt = Math.max(6, Math.min(14, Math.abs(x2 - x1) * 0.12));
+  const baseY = Math.min(y1, y2) - lift;
+  const leftX = Math.min(x1, x2);
+  const rightX = Math.max(x1, x2);
+  let leftY = baseY + tilt / 2;
+  let rightY = baseY - tilt / 2;
+  // Salvaguarda: si la línea queda por encima del lienzo (p. ej. en la cuerda
+  // más aguda, sin espacio arriba), se desplaza hacia abajo manteniendo la
+  // inclinación para que siempre se renderice.
+  const margin = 2;
+  const top = Math.min(leftY, rightY);
+  if (top < margin) {
+    const shift = margin - top;
+    leftY += shift;
+    rightY += shift;
+  }
+  return `M ${leftX.toFixed(1)} ${leftY.toFixed(1)} L ${rightX.toFixed(1)} ${rightY.toFixed(1)}`;
+}
 
 @Component({
   selector: 'app-tab-canvas',
@@ -259,15 +296,17 @@ export class TabCanvasComponent implements AfterViewInit, OnDestroy {
         const y1 = start.y - gridRect.top;
         const x2 = end.x - gridRect.left;
         const y2 = end.y - gridRect.top;
-        const midX = (x1 + x2) / 2;
-        const height = Math.max(14, Math.min(26, Math.abs(x2 - x1) * 0.26));
-        const cy = Math.min(y1, y2) - height;
+        const d =
+          pair.kind === 'glisando'
+            ? glisandoPath(x1, y1, x2, y2)
+            : slurPath(x1, y1, x2, y2);
         paths.push({
           id: pair.id,
           startId: pair.startId,
           endId: pair.endId,
+          kind: pair.kind,
           gridKey: key,
-          d: `M ${x1.toFixed(1)} ${y1.toFixed(1)} Q ${midX.toFixed(1)} ${cy.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`,
+          d,
         });
       }
     });
@@ -276,6 +315,18 @@ export class TabCanvasComponent implements AfterViewInit, OnDestroy {
   }
 
   private slurPairs(set: LineSet): SlurPair[] {
+    return [
+      ...this.pairsFor(set, 'slur_start', 'slur_end', 'slur'),
+      ...this.pairsFor(set, 'glisando_start', 'glisando_end', 'glisando'),
+    ];
+  }
+
+  private pairsFor(
+    set: LineSet,
+    startType: OrnamentType,
+    endType: OrnamentType,
+    kind: OrnamentPairKind
+  ): SlurPair[] {
     const sortByPos = (
       a: { columnIndex: number; stringNumber: number },
       b: { columnIndex: number; stringNumber: number }
@@ -284,7 +335,7 @@ export class TabCanvasComponent implements AfterViewInit, OnDestroy {
     const starts = set.columns
       .flatMap((c) =>
         c.ornaments
-          .filter((o) => o.type === 'slur_start')
+          .filter((o) => o.type === startType)
           .map((o) => ({
             id: o.id,
             stringNumber: o.stringIndex ?? 1,
@@ -295,7 +346,7 @@ export class TabCanvasComponent implements AfterViewInit, OnDestroy {
     const ends = set.columns
       .flatMap((c) =>
         c.ornaments
-          .filter((o) => o.type === 'slur_end')
+          .filter((o) => o.type === endType)
           .map((o) => ({
             id: o.id,
             stringNumber: o.stringIndex ?? 1,
@@ -323,6 +374,7 @@ export class TabCanvasComponent implements AfterViewInit, OnDestroy {
         id: `${chosen.id}-${end.id}`,
         startId: chosen.id,
         endId: end.id,
+        kind,
         stringNumber: chosen.stringNumber,
         endStringNumber: end.stringNumber,
         startColumn: chosen.columnIndex,
@@ -386,6 +438,7 @@ export class TabCanvasComponent implements AfterViewInit, OnDestroy {
       id: path.id,
       startId: path.startId,
       endId: path.endId,
+      kind: path.kind,
       blockIndex,
       lineSetIndex,
       x: event.clientX,
@@ -429,7 +482,9 @@ export class TabCanvasComponent implements AfterViewInit, OnDestroy {
         !this.isLineOrnament(o.type) &&
         o.type !== 'tremolo' &&
         o.type !== 'slur_start' &&
-        o.type !== 'slur_end'
+        o.type !== 'slur_end' &&
+        o.type !== 'glisando_start' &&
+        o.type !== 'glisando_end'
     );
   }
 

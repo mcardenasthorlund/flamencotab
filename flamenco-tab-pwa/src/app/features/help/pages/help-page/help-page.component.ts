@@ -26,8 +26,11 @@ const ORNAMENT_DESCRIPTIONS: Record<OrnamentType, string> = {
   repeat_end: 'Fin de un pasaje que se repite.',
   slur_start: 'Inicio de una ligadura (se une con su fin).',
   slur_end: 'Fin de una ligadura.',
+  glisando_start: 'Inicio de un glisando (se une con su fin).',
+  glisando_end: 'Fin de un glisando.',
   tremolo: 'Repite la nota cuatro veces en una cuerda.',
   rasgueo: 'Rasgueo en abanico.',
+  pulgar: 'Golpe de pulgar (rasgueo sin punta de flecha).',
   arrow_up: 'Dirección de rasgueo hacia arriba.',
   arrow_down: 'Dirección de rasgueo hacia abajo.',
 };

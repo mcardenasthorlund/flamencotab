@@ -16,7 +16,7 @@ Aplicación web progresiva (PWA) para crear, editar y guardar tablaturas de guit
 
 > 🎯 **Filosofía:** sin cuentas, sin servidores, sin bases de datos remotas. Tu música vive en tu dispositivo (LocalStorage) y puedes exportarla/importarla como JSON.
 
-> 🏷️ **Versión actual:** `0.71-beta`
+> 🏷️ **Versión actual:** `0.9-beta`
 
 ---
 
@@ -26,7 +26,7 @@ Aplicación web progresiva (PWA) para crear, editar y guardar tablaturas de guit
 - **Notación flamenca**:
   - Compás `|` y doble compás `||`.
   - Rasgueos (abanico, pulgar, alzapúa), golpe, flechas de dirección.
-  - Ligaduras (slur) y **trémolo** (una nota repetida 4 veces).
+  - Ligaduras (slur), **glisando** (línea recta inclinada entre dos notas) y **trémolo** (una nota repetida 4 veces).
 - **Tandas de líneas (`lineSets`)**: añade, duplica, reordena y elimina tandas dentro de cada bloque.
 - **Ancho fijo de tanda (1340 px)**: al añadir o quitar columnas, el ancho total se mantiene constante (las notas se compactan o separan); cada tanda tiene su propia barra de scroll horizontal en pantallas estrechas.
 - **Insertar / eliminar columnas desde la línea activa**: en la tanda de líneas que tiene la celda seleccionada, unos iconos permiten **insertar una columna antes o después** de la columna seleccionada y **eliminar esa columna** (con diálogo de confirmación). Solo se muestran en la línea activa.

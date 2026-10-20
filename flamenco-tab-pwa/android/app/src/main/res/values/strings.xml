@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">FlamencoTab</string>
+    <string name="title_activity_main">FlamencoTab</string>
+    <string name="package_name">es.maniacstudio.flamencotab</string>
+    <string name="custom_url_scheme">es.maniacstudio.flamencotab</string>
+</resources>

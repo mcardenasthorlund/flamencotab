@@ -12,6 +12,10 @@
   background: #ffffff;
   border-bottom: 1px solid #e2e8f0;
   flex-shrink: 0;
+  /* Modo inmersivo: deja libre el notch / barra de estado al mostrarse. */
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
 .nav-inner {

@@ -20,7 +20,7 @@ export const appConfig: ApplicationConfig = {
       useValue: { ...DEFAULT_SYNC_CONFIG, apiBaseUrl: environment.apiBaseUrl },
     },
     provideServiceWorker('ngsw-worker.js', {
-      enabled: !isDevMode(),
+      enabled: environment.serviceWorker && !isDevMode(),
       registrationStrategy: 'registerImmediately',
     }),
   ],

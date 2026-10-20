@@ -5,4 +5,5 @@
 export const environment = {
   production: false,
   apiBaseUrl: 'https://appbackend.ideasypruebas2.es',
+  serviceWorker: true,
 };

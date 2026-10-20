@@ -15,7 +15,7 @@
       @for (set of block.lineSets; track set.id; let lsIdx = $index) {
         <div class="tab-wrap">
           <div class="tab-rel">
-            <div class="tab" appGridRef [context]="{ blockIndex: bIdx, lineSetIndex: lsIdx }">
+            <div class="tab" [class.has-slur]="hasPair(set)" appGridRef [context]="{ blockIndex: bIdx, lineSetIndex: lsIdx }">
               <div class="gutter">
                 @for (s of stringNumbers; track s) {
                   <span class="gutter-num">{{ s }}</span>
@@ -31,10 +31,16 @@
                           <span class="rn-bar rn-bar-thin"></span>
                           <span class="rn-dots"><i></i><i></i></span>
                         }
-                        @if (orn.type === 'rasgueo') {
-                          <svg class="orn-rasgueo-svg" viewBox="0 0 12 40" preserveAspectRatio="none">
+                        @if (orn.type === 'rasgueo' || orn.type === 'pulgar') {
+                          <svg
+                            class="orn-rasgueo-svg"
+                            [attr.viewBox]="orn.type === 'pulgar' ? '0 11 12 22' : '0 0 12 40'"
+                            preserveAspectRatio="none"
+                          >
                             <path d="M9 32 Q12 30 9 28 Q6 26 9 24 Q12 22 9 20 Q6 18 9 16 Q12 14 9 12" fill="none" stroke="#000" stroke-width="1" stroke-linecap="round" />
-                            <polygon points="9,2 5,11 13,11" fill="#000" />
+                            @if (orn.type === 'rasgueo') {
+                              <polygon points="9,2 5,11 13,11" fill="#000" />
+                            }
                           </svg>
                         }
                       </span>

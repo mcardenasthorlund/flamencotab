@@ -5,7 +5,7 @@ import { Tablature, NoteEntry, TabColumn, LineSet } from '../../../../core/model
 import { TabStorageService } from '../../../../core/services/tab-storage.service';
 import { ChordLibraryService } from '../../../../core/services/chord-library.service';
 import { Chord } from '../../../../core/models/chord.model';
-import { Ornament, OrnamentType } from '../../../../core/models/ornament.model';
+import { Ornament, OrnamentType, OrnamentPairKind } from '../../../../core/models/ornament.model';
 import { QUICK_ORNAMENTS } from '../../../../core/constants/ornament.constant';
 import { STRING_COUNT } from '../../../../core/constants/guitar.constant';
 import { isColumnTremolo } from '../../../../shared/utils/tab-render.util';
@@ -82,6 +82,7 @@ export class EditorPageComponent implements OnInit, OnDestroy {
     id: string;
     startId: string;
     endId: string;
+    kind: OrnamentPairKind;
     blockIndex: number;
     lineSetIndex: number;
   } | null>(null);
@@ -89,14 +90,18 @@ export class EditorPageComponent implements OnInit, OnDestroy {
   readonly selectedOrnamentId = computed(() => this.selectedOrnament()?.ornament.id ?? null);
   readonly selectedSlurId = computed(() => this.selectedSlur()?.id ?? null);
 
-  readonly ornamentActionLabel = computed(() =>
-    this.selectedSlur() ? 'Eliminar ligadura' : 'Eliminar ornamento'
-  );
-  readonly ornamentDeleteMessage = computed(() =>
-    this.selectedSlur()
-      ? '¿Eliminar esta ligadura de la tablatura?'
-      : '¿Eliminar este ornamento de la tablatura?'
-  );
+  readonly ornamentActionLabel = computed(() => {
+    const slur = this.selectedSlur();
+    if (!slur) return 'Eliminar ornamento';
+    return slur.kind === 'glisando' ? 'Eliminar glisando' : 'Eliminar ligadura';
+  });
+  readonly ornamentDeleteMessage = computed(() => {
+    const slur = this.selectedSlur();
+    if (!slur) return '¿Eliminar este ornamento de la tablatura?';
+    return slur.kind === 'glisando'
+      ? '¿Eliminar este glisando de la tablatura?'
+      : '¿Eliminar esta ligadura de la tablatura?';
+  });
 
   readonly sheetOptions = signal<PrintOptions>({
     landscape: false,
@@ -310,6 +315,7 @@ export class EditorPageComponent implements OnInit, OnDestroy {
       id: payload.id,
       startId: payload.startId,
       endId: payload.endId,
+      kind: payload.kind,
       blockIndex: payload.blockIndex,
       lineSetIndex: payload.lineSetIndex,
     });

@@ -54,6 +54,12 @@
   width: 100%;
 }
 
+/* Reserva espacio por encima de las cuerdas para que la ligadura o el glisando
+   dibujados sobre la nota más aguda no queden fuera del lienzo. */
+.tab.has-slur {
+  padding-top: 16px;
+}
+
 .slur-overlay {
   position: absolute;
   inset: 0;
@@ -266,11 +272,13 @@
   left: 0;
 }
 
-.orn-rasgueo {
+.orn-rasgueo,
+.orn-pulgar {
   width: 14px;
 }
 
-.orn-rasgueo::before {
+.orn-rasgueo::before,
+.orn-pulgar::before {
   display: none;
 }
 
@@ -282,6 +290,13 @@
   left: auto;
   width: 14px;
   height: 100%;
+}
+
+/* El pulgar se ajusta a la misma altura que las flechas de arriba/abajo. */
+.orn-pulgar .orn-rasgueo-svg {
+  top: 3px;
+  bottom: 3px;
+  height: calc(100% - 6px);
 }
 
 .orn-arrow_up::before,

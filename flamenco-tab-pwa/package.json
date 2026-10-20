@@ -1,12 +1,16 @@
 {
   "name": "flamenco-tab-pwa",
-  "version": "0.71-beta",
+  "version": "0.9-beta",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "build:android": "ng build --configuration capacitor",
+    "cap:sync": "cap sync android",
+    "cap:open": "cap open android",
+    "android:aab": "cd android && gradlew bundleRelease"
   },
   "private": true,
   "packageManager": "npm@12.0.2",
@@ -18,6 +22,9 @@
     "@angular/platform-browser": "^22.2.0",
     "@angular/router": "^22.2.0",
     "@angular/service-worker": "^22.2.0",
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/splash-screen": "^8.0.2",
     "html2canvas": "^1.4.1",
     "jspdf": "^4.2.1",
     "rxjs": "~7.8.0",
@@ -27,9 +34,17 @@
     "@angular/build": "^22.2.0",
     "@angular/cli": "^22.2.0",
     "@angular/compiler-cli": "^22.2.0",
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.5.3",
     "jsdom": "^30.0.0",
     "prettier": "^3.8.1",
     "typescript": "~6.0.2",
     "vitest": "^5.0.0"
+  },
+  "allowScripts": {
+    "sharp@0.32.6": true
+  },
+  "overrides": {
+    "sharp": "0.35.5"
   }
 }
