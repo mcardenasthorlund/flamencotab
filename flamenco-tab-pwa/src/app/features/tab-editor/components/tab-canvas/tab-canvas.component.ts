@@ -12,7 +12,7 @@ import {
   type QueryList,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TabBlock, TabColumn, NoteEntry, LineSet } from '../../../../core/models/tab.model';
+import { TabBlock, TabColumn, NoteEntry, LineSet, SelectionRange } from '../../../../core/models/tab.model';
 import { Ornament, OrnamentType, OrnamentPairKind } from '../../../../core/models/ornament.model';
 import { ORNAMENT_META, isLineOrnament as isLineOrnamentType } from '../../../../core/constants/ornament.constant';
 import { STRING_COUNT, STRING_NUMBERS } from '../../../../core/constants/guitar.constant';
@@ -53,6 +53,13 @@ export interface SlurSelectPayload {
   kind: OrnamentPairKind;
   blockIndex: number;
   lineSetIndex: number;
+  x: number;
+  y: number;
+}
+
+export interface SelectionCommitPayload {
+  range: SelectionRange;
+  moved: boolean;
   x: number;
   y: number;
 }
@@ -133,11 +140,14 @@ export class TabCanvasComponent implements AfterViewInit, OnDestroy {
   readonly selectedCell = input<CellSelection | null>(null);
   readonly selectedOrnamentId = input<string | null>(null);
   readonly selectedSlurId = input<string | null>(null);
+  readonly selectionMode = input(false);
+  readonly selectionRange = input<SelectionRange | null>(null);
 
-  readonly cellSelect = output<CellSelection>();
   readonly cellLongPress = output<CellLongPressPayload>();
   readonly ornamentLineClick = output<OrnamentLinePayload>();
   readonly slurSelect = output<SlurSelectPayload>();
+  readonly selectionChange = output<SelectionRange>();
+  readonly selectionCommit = output<SelectionCommitPayload>();
   readonly blockAdd = output<void>();
   readonly blockDelete = output<number>();
   readonly blockDuplicate = output<number>();
@@ -191,6 +201,16 @@ export class TabCanvasComponent implements AfterViewInit, OnDestroy {
   private resizeObserver: ResizeObserver | null = null;
   private measureQueued = false;
 
+  private dragState: {
+    blockIndex: number;
+    lineSetIndex: number;
+    anchorColumn: number;
+    anchorString: number;
+    lastRange: SelectionRange;
+    moved: boolean;
+    selecting: boolean;
+  } | null = null;
+
   constructor() {
     effect(() => {
       void this.blocks();
@@ -207,6 +227,7 @@ export class TabCanvasComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.resizeObserver?.disconnect();
     this.resizeObserver = null;
+    this.removeDragListeners();
   }
 
   private scheduleMeasure(): void {
@@ -539,13 +560,159 @@ export class TabCanvasComponent implements AfterViewInit, OnDestroy {
     );
   }
 
-  onCellClick(
+  isInSelection(
     blockIndex: number,
     lineSetIndex: number,
     columnIndex: number,
     stringNumber: number
+  ): boolean {
+    const r = this.selectionRange();
+    if (!r || r.blockIndex !== blockIndex || r.lineSetIndex !== lineSetIndex) {
+      return false;
+    }
+    const c0 = Math.min(r.startColumn, r.endColumn);
+    const c1 = Math.max(r.startColumn, r.endColumn);
+    const s0 = Math.min(r.startString, r.endString);
+    const s1 = Math.max(r.startString, r.endString);
+    if (c0 === c1 && s0 === s1) return false;
+    return (
+      columnIndex >= c0 &&
+      columnIndex <= c1 &&
+      stringNumber >= s0 &&
+      stringNumber <= s1
+    );
+  }
+
+  onGridPointerDown(
+    event: PointerEvent,
+    blockIndex: number,
+    lineSetIndex: number
   ): void {
-    this.cellSelect.emit({ blockIndex, lineSetIndex, columnIndex, stringNumber });
+    const target = event.target as HTMLElement | null;
+    // Solo se inicia la selección sobre una celda de nota (no sobre la fila de
+    // ornamentos ni las etiquetas).
+    if (!target?.closest('.fret-cell')) return;
+    const isMouse = event.pointerType === 'mouse';
+    if (isMouse && event.button !== 0) return;
+    // Con el dedo, el arrastre de selección requiere el modo activo para no
+    // chocar con el scroll; un toque simple siempre selecciona la celda.
+    const selecting = isMouse || this.selectionMode();
+
+    const cell = this.cellAt(blockIndex, lineSetIndex, event.clientX, event.clientY);
+    if (!cell) return;
+
+    if (selecting) event.preventDefault();
+
+    const range: SelectionRange = {
+      blockIndex,
+      lineSetIndex,
+      startColumn: cell.columnIndex,
+      endColumn: cell.columnIndex,
+      startString: cell.stringNumber,
+      endString: cell.stringNumber,
+    };
+    this.dragState = {
+      blockIndex,
+      lineSetIndex,
+      anchorColumn: cell.columnIndex,
+      anchorString: cell.stringNumber,
+      lastRange: range,
+      moved: false,
+      selecting,
+    };
+    document.addEventListener('pointermove', this.onDocPointerMove);
+    document.addEventListener('pointerup', this.onDocPointerUp);
+    document.addEventListener('pointercancel', this.onDocPointerCancel);
+  }
+
+  private onDocPointerMove = (event: PointerEvent): void => {
+    const d = this.dragState;
+    if (!d) return;
+    const cell = this.cellAt(
+      d.blockIndex,
+      d.lineSetIndex,
+      event.clientX,
+      event.clientY
+    );
+    if (!cell) return;
+    const movedToOther =
+      cell.columnIndex !== d.anchorColumn ||
+      cell.stringNumber !== d.anchorString;
+    if (!d.selecting) {
+      // Dedo sin modo selección: un desplazamiento es scroll → se cancela.
+      if (movedToOther) this.cancelDrag();
+      return;
+    }
+    if (movedToOther) d.moved = true;
+    const range: SelectionRange = {
+      blockIndex: d.blockIndex,
+      lineSetIndex: d.lineSetIndex,
+      startColumn: Math.min(d.anchorColumn, cell.columnIndex),
+      endColumn: Math.max(d.anchorColumn, cell.columnIndex),
+      startString: Math.min(d.anchorString, cell.stringNumber),
+      endString: Math.max(d.anchorString, cell.stringNumber),
+    };
+    d.lastRange = range;
+    this.selectionChange.emit(range);
+  };
+
+  private onDocPointerUp = (event: PointerEvent): void => {
+    const d = this.dragState;
+    this.dragState = null;
+    this.removeDragListeners();
+    if (!d) return;
+    this.selectionCommit.emit({
+      range: d.lastRange,
+      moved: d.moved,
+      x: event.clientX,
+      y: event.clientY,
+    });
+  };
+
+  private onDocPointerCancel = (): void => {
+    this.cancelDrag();
+  };
+
+  private cancelDrag(): void {
+    this.dragState = null;
+    this.removeDragListeners();
+  }
+
+  private removeDragListeners(): void {
+    document.removeEventListener('pointermove', this.onDocPointerMove);
+    document.removeEventListener('pointerup', this.onDocPointerUp);
+    document.removeEventListener('pointercancel', this.onDocPointerCancel);
+  }
+
+  /** Celda del grid más cercana al punto; recorta al borde si el puntero sale. */
+  private cellAt(
+    blockIndex: number,
+    lineSetIndex: number,
+    x: number,
+    y: number
+  ): { columnIndex: number; stringNumber: number } | null {
+    let best: { columnIndex: number; stringNumber: number } | null = null;
+    let bestDist = Infinity;
+    this.cellRefs.forEach((cell) => {
+      const ctx = cell.context();
+      if (
+        !ctx ||
+        ctx.blockIndex !== blockIndex ||
+        ctx.lineSetIndex !== lineSetIndex
+      ) {
+        return;
+      }
+      const r = cell.element.nativeElement.getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      const cy = r.top + r.height / 2;
+      const inside = x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+      const dist = inside ? -1 : (x - cx) ** 2 + (y - cy) ** 2;
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = { columnIndex: ctx.columnIndex, stringNumber: ctx.stringNumber };
+      }
+    });
+    return best;
   }
 
   onColumnInsertBefore(

@@ -2,7 +2,7 @@
   class="fret-cell"
   [class]="'thickness-' + stringNumber()"
   [class.selected]="selected()"
-  (click)="cellClick.emit({ stringNumber: stringNumber(), columnIndex: columnIndex() })"
+  [class.in-selection]="inSelection()"
   appTouchGestures
   (longPress)="onLongPress($event)"
 >

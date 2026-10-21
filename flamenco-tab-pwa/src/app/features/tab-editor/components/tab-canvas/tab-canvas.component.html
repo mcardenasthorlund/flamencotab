@@ -91,8 +91,10 @@
             <div
                 class="tab-grid"
                 [class.has-slur]="slurPathsFor(bIdx, lsIdx).length > 0"
+                [class.selection-mode]="selectionMode()"
                 appGridRef
                 [context]="{ blockIndex: bIdx, lineSetIndex: lsIdx }"
+                (pointerdown)="onGridPointerDown($event, bIdx, lsIdx)"
               >
             <svg
               class="slur-overlay"
@@ -155,9 +157,10 @@
                       [tremolo]="isTremolo(col, cIdx, note.stringNumber)"
                       [tremoloFrets]="note.tremoloFrets"
                       [selected]="isSelected(bIdx, lsIdx, cIdx, note.stringNumber)"
+                      [inSelection]="isInSelection(bIdx, lsIdx, cIdx, note.stringNumber)"
+                      [selectionMode]="selectionMode()"
                       [stringNumber]="note.stringNumber"
                       [columnIndex]="cIdx"
-                      (cellClick)="onCellClick(bIdx, lsIdx, cIdx, $event.stringNumber)"
                       (cellLongPress)="onCellLongPress(bIdx, lsIdx, cIdx, $event)"
                     />
                   }

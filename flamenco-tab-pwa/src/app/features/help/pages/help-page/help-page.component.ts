@@ -57,6 +57,8 @@ export class HelpPageComponent {
     { keys: 'Mayús + ↑', action: 'Sube un traste la nota seleccionada.' },
     { keys: 'Mayús + ↓', action: 'Baja un traste la nota seleccionada.' },
     { keys: 'Mayús + T', action: 'Activa o desactiva el trémolo de la nota.' },
+    { keys: 'Ctrl / Cmd + C', action: 'Copia la selección de notas.' },
+    { keys: 'Ctrl / Cmd + V', action: 'Pega lo copiado en la selección actual.' },
   ];
 
   readonly sections: HelpSectionLink[] = [

@@ -43,6 +43,15 @@
         <input type="checkbox" [checked]="forceFretDial()" (change)="onForceFretDialChange($any($event.target).checked)" />
         <span class="btn-text">Panel de notas</span>
       </label>
+      <button
+        class="btn btn-secondary selection-toggle"
+        [class.active]="selectionMode()"
+        (click)="toggleSelectionMode()"
+        [attr.title]="selectionMode() ? 'Desactivar modo selección' : 'Seleccionar varias notas'"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" stroke-dasharray="4 3"/><path d="M7 12l3 3 7-7"/></svg>
+        <span class="btn-text">Seleccionar</span>
+      </button>
       <button class="btn btn-danger" (click)="onClearConfirm()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
         <span class="btn-text">Limpiar</span>
@@ -60,6 +69,8 @@
         [selectedCell]="selectedCell()"
         [selectedOrnamentId]="selectedOrnamentId()"
         [selectedSlurId]="selectedSlurId()"
+        [selectionMode]="selectionMode()"
+        [selectionRange]="selectionRange()"
         (blockAdd)="onBlockAdd()"
         (blockDelete)="requestBlockDelete($event)"
         (blockDuplicate)="onBlockDuplicate($event)"
@@ -75,10 +86,11 @@
         (columnInsertAfter)="onColumnInsertAfter($event)"
         (columnDelete)="onColumnDeleteSelected($event)"
         (columnLabelChange)="onColumnLabelChange($event)"
-        (cellSelect)="onCellSelect($event)"
         (cellLongPress)="onCellLongPress($event)"
         (ornamentLineClick)="onOrnamentLineClick($event)"
         (slurSelect)="onSlurSelect($event)"
+        (selectionChange)="onSelectionChange($event)"
+        (selectionCommit)="onSelectionCommit($event)"
       />
     </div>
 
@@ -159,6 +171,22 @@
         <button class="btn btn-secondary btn-xs" (click)="dismissOrnamentActions()">
           Cerrar
         </button>
+      </div>
+    }
+
+    @if (showSelectionMenu()) {
+      <div
+        class="selection-menu"
+        [style.left.px]="selectionMenuPos().x"
+        [style.top.px]="selectionMenuPos().y"
+      >
+        @if (hasMultiSelection()) {
+          <button class="btn btn-secondary btn-xs" (click)="copySelection()">Copiar</button>
+        }
+        @if (clipboard()) {
+          <button class="btn btn-secondary btn-xs" (click)="pasteSelection()">Pegar</button>
+        }
+        <button class="btn btn-secondary btn-xs" (click)="closeSelectionMenu()">Cerrar</button>
       </div>
     }
 

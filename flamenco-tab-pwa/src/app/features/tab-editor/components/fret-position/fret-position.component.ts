@@ -15,9 +15,10 @@ export class FretPositionComponent {
   readonly tremolo = input(false);
   readonly tremoloFrets = input<string[] | undefined>(undefined);
   readonly selected = input(false);
+  readonly inSelection = input(false);
+  readonly selectionMode = input(false);
   readonly stringNumber = input(0);
   readonly columnIndex = input(0);
-  readonly cellClick = output<{ stringNumber: number; columnIndex: number }>();
   readonly cellLongPress = output<{
     x: number;
     y: number;
@@ -30,6 +31,7 @@ export class FretPositionComponent {
   }
 
   onLongPress(event: LongPressEvent): void {
+    if (this.selectionMode()) return;
     this.cellLongPress.emit({
       x: event.x,
       y: event.y,

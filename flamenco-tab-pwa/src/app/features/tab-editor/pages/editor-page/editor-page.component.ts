@@ -1,7 +1,7 @@
 import { Component, signal, computed, inject, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Tablature, NoteEntry, TabColumn, LineSet } from '../../../../core/models/tab.model';
+import { Tablature, NoteEntry, TabColumn, LineSet, SelectionRange, TabClipboard } from '../../../../core/models/tab.model';
 import { TabStorageService } from '../../../../core/services/tab-storage.service';
 import { ChordLibraryService } from '../../../../core/services/chord-library.service';
 import { Chord } from '../../../../core/models/chord.model';
@@ -10,10 +10,11 @@ import { QUICK_ORNAMENTS } from '../../../../core/constants/ornament.constant';
 import { STRING_COUNT } from '../../../../core/constants/guitar.constant';
 import { isColumnTremolo } from '../../../../shared/utils/tab-render.util';
 import { cloneBlock, cloneLineSet } from '../../../../core/utils/tab.util';
+import { buildClipboard, pasteClipboard } from '../../../../core/utils/tab-clipboard.util';
 import { moveItem, newId } from '../../../../shared/utils/array.util';
 import { take } from 'rxjs';
 import { readFileAsText } from '../../../../shared/utils/file.util';
-import { TabCanvasComponent, CellSelection, CellLongPressPayload, OrnamentLinePayload, SlurSelectPayload } from '../../components/tab-canvas/tab-canvas.component';
+import { TabCanvasComponent, CellSelection, CellLongPressPayload, OrnamentLinePayload, SlurSelectPayload, SelectionCommitPayload } from '../../components/tab-canvas/tab-canvas.component';
 import { OrnamentToolbarComponent } from '../../components/ornament-toolbar/ornament-toolbar.component';
 import { ChordPickerDialogComponent } from '../../components/chord-picker-dialog/chord-picker-dialog.component';
 import { PrintDialogComponent, PrintOptions } from '../../components/print-dialog/print-dialog.component';
@@ -49,6 +50,11 @@ export class EditorPageComponent implements OnInit, OnDestroy {
 
   readonly tab = signal<Tablature | null>(null);
   readonly selectedCell = signal<CellSelection | null>(null);
+  readonly selectionMode = signal(false);
+  readonly selectionRange = signal<SelectionRange | null>(null);
+  readonly clipboard = signal<TabClipboard | null>(null);
+  readonly showSelectionMenu = signal(false);
+  readonly selectionMenuPos = signal<{ x: number; y: number }>({ x: 0, y: 0 });
   readonly activeOrnament = signal<OrnamentType | null>(null);
   readonly showOrnamentMenu = signal(false);
   readonly showChordPicker = signal(false);
@@ -89,6 +95,11 @@ export class EditorPageComponent implements OnInit, OnDestroy {
 
   readonly selectedOrnamentId = computed(() => this.selectedOrnament()?.ornament.id ?? null);
   readonly selectedSlurId = computed(() => this.selectedSlur()?.id ?? null);
+  readonly hasMultiSelection = computed(() => {
+    const r = this.selectionRange();
+    if (!r) return false;
+    return r.startColumn !== r.endColumn || r.startString !== r.endString;
+  });
 
   readonly ornamentActionLabel = computed(() => {
     const slur = this.selectedSlur();
@@ -142,6 +153,25 @@ export class EditorPageComponent implements OnInit, OnDestroy {
       return;
     }
     const key = event.key;
+    if ((event.ctrlKey || event.metaKey) && (key === 'c' || key === 'C')) {
+      if (this.selectionRange()) {
+        event.preventDefault();
+        this.copySelection();
+      }
+      return;
+    }
+    if ((event.ctrlKey || event.metaKey) && (key === 'v' || key === 'V')) {
+      if (this.clipboard() && this.selectionRange()) {
+        event.preventDefault();
+        this.pasteSelection();
+      }
+      return;
+    }
+    if (key === 'Escape') {
+      this.selectionRange.set(null);
+      this.showSelectionMenu.set(false);
+      return;
+    }
     if (!this.selectedCell()) return;
     if (/^[0-9]$/.test(key)) {
       event.preventDefault();
@@ -190,6 +220,14 @@ export class EditorPageComponent implements OnInit, OnDestroy {
       lineSetIndex: cell.lineSetIndex,
       columnIndex: newColumn,
       stringNumber: newString,
+    });
+    this.selectionRange.set({
+      blockIndex: cell.blockIndex,
+      lineSetIndex: cell.lineSetIndex,
+      startColumn: newColumn,
+      endColumn: newColumn,
+      startString: newString,
+      endString: newString,
     });
   }
 
@@ -288,12 +326,89 @@ export class EditorPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  onCellSelect(sel: CellSelection): void {
-    this.selectedCell.set(sel);
+  toggleSelectionMode(): void {
+    const next = !this.selectionMode();
+    this.selectionMode.set(next);
+    this.selectionRange.set(null);
+    this.showSelectionMenu.set(false);
+  }
+
+  onSelectionChange(range: SelectionRange): void {
+    this.selectionRange.set(range);
+    this.showSelectionMenu.set(false);
+  }
+
+  onSelectionCommit(payload: SelectionCommitPayload): void {
+    const r = payload.range;
+    this.selectionRange.set(r);
+    this.selectedCell.set({
+      blockIndex: r.blockIndex,
+      lineSetIndex: r.lineSetIndex,
+      columnIndex: r.startColumn,
+      stringNumber: r.startString,
+    });
     this.activeOrnament.set(null);
     this.selectedOrnament.set(null);
     this.selectedSlur.set(null);
     this.showOrnamentActions.set(false);
+    const multi =
+      r.startColumn !== r.endColumn || r.startString !== r.endString;
+    // El menú aparece con una selección múltiple (para copiar) o si hay algo
+    // copiado en memoria (para pegar sobre la cuerda pulsada).
+    if (multi || this.clipboard()) {
+      // Pequeño desplazamiento para no colocar el menú justo bajo el puntero.
+      this.selectionMenuPos.set({ x: payload.x + 12, y: payload.y + 12 });
+      this.showSelectionMenu.set(true);
+    } else {
+      this.showSelectionMenu.set(false);
+    }
+  }
+
+  closeSelectionMenu(): void {
+    this.showSelectionMenu.set(false);
+  }
+
+  copySelection(): void {
+    const t = this.tab();
+    const r = this.selectionRange();
+    if (!t || !r) return;
+    const set = t.blocks[r.blockIndex]?.lineSets[r.lineSetIndex];
+    if (!set) return;
+    this.clipboard.set(buildClipboard(set, r));
+    this.showSelectionMenu.set(false);
+  }
+
+  pasteSelection(): void {
+    const clip = this.clipboard();
+    const r = this.selectionRange();
+    if (!clip || !r) return;
+    const out: { range: SelectionRange | null } = { range: null };
+    this.mutateTab((t) => {
+      out.range = pasteClipboard(
+        t.blocks,
+        {
+          blockIndex: r.blockIndex,
+          lineSetIndex: r.lineSetIndex,
+          columnIndex: r.startColumn,
+          stringNumber: r.startString,
+        },
+        clip,
+        (index) => this.storage.createEmptyColumn(index),
+        (order) => this.storage.createEmptyLineSet(order)
+      );
+    });
+    // El portapapeles se vacía al pegar: no se puede pegar dos veces lo mismo.
+    this.clipboard.set(null);
+    this.showSelectionMenu.set(false);
+    if (out.range) {
+      this.selectionRange.set(out.range);
+      this.selectedCell.set({
+        blockIndex: out.range.blockIndex,
+        lineSetIndex: out.range.lineSetIndex,
+        columnIndex: out.range.startColumn,
+        stringNumber: out.range.startString,
+      });
+    }
   }
 
   onOrnamentLineClick(payload: OrnamentLinePayload): void {

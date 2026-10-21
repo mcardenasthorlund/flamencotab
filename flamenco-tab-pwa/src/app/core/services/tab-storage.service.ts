@@ -6,6 +6,7 @@ import { fillStrings } from '../../shared/utils/guitar.util';
 import { newId } from '../../shared/utils/array.util';
 import { SyncService } from '../sync/sync.service';
 import { SyncChange, SyncEnvelope } from '../sync/models/sync.model';
+import { DEFAULT_COLUMNS } from '../constants/tab.constant';
 
 const INDEX_KEY = 'flamenco_tabs_index';
 const ACTIVE_KEY = 'flamenco_active_tab_id';
@@ -132,7 +133,7 @@ export class TabStorageService {
     return {
       id: newId('line-set'),
       order,
-      columns: Array.from({ length: 34 }, (_, i) => this.createEmptyColumn(i)),
+      columns: Array.from({ length: DEFAULT_COLUMNS }, (_, i) => this.createEmptyColumn(i)),
     };
   }
 

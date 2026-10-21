@@ -36,3 +36,33 @@ export interface Tablature {
   lastModifiedDate: string;
   blocks: TabBlock[];
 }
+
+/** Región rectangular seleccionada dentro de una sola tanda de líneas. */
+export interface SelectionRange {
+  blockIndex: number;
+  lineSetIndex: number;
+  startColumn: number;
+  endColumn: number;
+  startString: number;
+  endString: number;
+}
+
+export interface ClipboardNote {
+  stringNumber: number;
+  fret: string;
+  tremoloFrets?: string[];
+}
+
+export interface ClipboardColumn {
+  notes: ClipboardNote[];
+  ornaments: Ornament[];
+  label?: string;
+}
+
+/** Contenido copiado de una selección, listo para pegar en otra posición. */
+export interface TabClipboard {
+  width: number;
+  height: number;
+  startString: number;
+  columns: ClipboardColumn[];
+}

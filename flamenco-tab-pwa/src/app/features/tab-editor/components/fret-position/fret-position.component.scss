@@ -42,6 +42,12 @@
   pointer-events: none;
 }
 
+/* Resaltado de la región seleccionada (arrastre de varias notas). */
+.fret-cell.in-selection {
+  background: rgba(37, 99, 235, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.35);
+}
+
 .fret-cell::after {
   content: '';
   position: absolute;

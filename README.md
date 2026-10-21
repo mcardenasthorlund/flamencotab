@@ -16,7 +16,7 @@ Aplicación web progresiva (PWA) para crear, editar y guardar tablaturas de guit
 
 > 🎯 **Filosofía:** sin cuentas, sin servidores, sin bases de datos remotas. Tu música vive en tu dispositivo (LocalStorage) y puedes exportarla/importarla como JSON.
 
-> 🏷️ **Versión actual:** `0.9-beta`
+> 🏷️ **Versión actual:** `0.91-beta`
 
 ---
 
@@ -30,6 +30,7 @@ Aplicación web progresiva (PWA) para crear, editar y guardar tablaturas de guit
 - **Tandas de líneas (`lineSets`)**: añade, duplica, reordena y elimina tandas dentro de cada bloque.
 - **Ancho fijo de tanda (1340 px)**: al añadir o quitar columnas, el ancho total se mantiene constante (las notas se compactan o separan); cada tanda tiene su propia barra de scroll horizontal en pantallas estrechas.
 - **Insertar / eliminar columnas desde la línea activa**: en la tanda de líneas que tiene la celda seleccionada, unos iconos permiten **insertar una columna antes o después** de la columna seleccionada y **eliminar esa columna** (con diálogo de confirmación). Solo se muestran en la línea activa.
+- **Selección múltiple de notas**: arrastra con el ratón (o con el dedo activando el botón **Seleccionar**) para seleccionar un rectángulo de notas, **copiarlas** y **pegarlas** en otra posición. Al pegar se abre hueco desplazando lo existente y, si no cabe en la tanda, se crean automáticamente nuevas tandas de líneas.
 - **Espaciado de ornamentos**: los ornamentos se dibujan a la derecha de la nota con una **separación fija** entre ellos y respecto a la nota. La columna se ensancha **solo lo necesario** para contenerlos, de modo que nunca se solapan con la columna siguiente y el espaciado de la izquierda no se altera.
 - **Bloques**: reordenables, duplicables, con título editable por bloque y **colapsables/expandibles**.
 - **Librería de acordes flamencos** en nomenclatura española (DO, RE, MI, FA, SOL, LA, SI) con posturas para palos típicos (Bulerías, Soleá, Tangos…) y acordes personalizados.

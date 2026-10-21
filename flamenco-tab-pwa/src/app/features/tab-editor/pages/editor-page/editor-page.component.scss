@@ -281,6 +281,25 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
 }
 
+.selection-menu {
+  position: fixed;
+  z-index: 1100;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  padding: 0.5rem;
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+}
+
+.selection-toggle.active {
+  background: #2563EB;
+  color: #ffffff;
+  border-color: #2563EB;
+}
+
 @media (max-width: 767px) {
   .toolbar .btn {
     padding: 0.45rem;
